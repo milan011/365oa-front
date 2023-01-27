@@ -355,7 +355,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/ums/resource/categoryList'),
         meta: {title: '资源分类'},
         hidden: true
-      }
+      },
+      {
+        path: 'department',
+        name: 'department',
+        component: () => import('@/views/ums/department/index'),
+        meta: {title: '部门列表', icon: 'ums-department'}
+      },
     ]
   },
   {path: '*', redirect: '/404', hidden: true}

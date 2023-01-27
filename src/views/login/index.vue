@@ -27,7 +27,7 @@
                     @keyup.enter.native="handleLogin"
                     v-model="loginForm.password"
                     autoComplete="on"
-                    placeholder="请输入密码">
+                    placeholder="macro123">
           <span slot="prefix">
             <svg-icon icon-class="password" class="color-main"></svg-icon>
           </span>
