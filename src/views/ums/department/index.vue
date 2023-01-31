@@ -29,20 +29,20 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button class="btn-add" size="mini" @click="handleShowCategory()">资源分类</el-button>
+      <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
     </el-card>
     <div class="table-container">
-      <el-table ref="resourceTable"
+      <el-table ref="departmentTable"
                 v-loading="listLoading"
                 :data="list"
                 border style="width: 100%;">
         <el-table-column align="center" label="编号" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column align="center" label="资源名称">
+        <el-table-column align="center" label="部门名称">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column align="center" label="资源路径">
+        <el-table-column align="center" label="部门路径">
           <template slot-scope="scope">{{scope.row.url}}</template>
         </el-table-column>
         <el-table-column align="center" label="描述">
@@ -79,20 +79,20 @@
       </el-pagination>
     </div>
     <el-dialog
-      :title="isEdit?'编辑资源':'添加资源'"
+      :title="isEdit?'编辑部门':'添加部门'"
       :visible.sync="dialogVisible"
       width="40%">
-      <el-form ref="resourceForm"
-               :model="resource"
+      <el-form ref="departmentForm"
+               :model="department"
                label-width="150px" size="small">
-        <el-form-item label="资源名称：">
-          <el-input v-model="resource.name" style="width: 250px"></el-input>
+        <el-form-item label="部门名称：">
+          <el-input v-model="department.name" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item label="资源路径：">
-          <el-input v-model="resource.url" style="width: 250px"></el-input>
+        <el-form-item label="部门路径：">
+          <el-input v-model="department.url" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item label="资源分类：">
-          <el-select v-model="resource.categoryId" clearable placeholder="全部" style="width: 250px">
+        <el-form-item label="部门分类：">
+          <el-select v-model="department.categoryId" clearable placeholder="全部" style="width: 250px">
             <el-option v-for="item in categoryOptions"
                        :key="item.value"
                        :label="item.label"
@@ -101,7 +101,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="描述：">
-          <el-input v-model="resource.description"
+          <el-input v-model="department.description"
                     :rows="5"
                     style="width: 250px"
                     type="textarea"></el-input>
@@ -115,8 +115,7 @@
   </div>
 </template>
 <script>
-import {fetchList,createResource,updateResource,deleteResource} from '@/api/resource';
-import {listAllCate} from '@/api/resourceCategory';
+import {fetchList,createDepartment,updateDepartment,deleteDepartment} from '@/api/department';
 import {formatDate} from '@/utils/date';
 
 const defaultListQuery = {
@@ -126,7 +125,7 @@ const defaultListQuery = {
   urlKeyword: null,
   categoryId:null
 };
-const defaultResource = {
+const defaultDepartment = {
   id: null,
   name: null,
   url: null,
@@ -134,7 +133,7 @@ const defaultResource = {
   description:''
 };
 export default {
-  name: 'resourceList',
+  name: 'departmentList',
   data() {
     return {
       listQuery: Object.assign({}, defaultListQuery),
@@ -142,7 +141,7 @@ export default {
       total: null,
       listLoading: false,
       dialogVisible: false,
-      resource: Object.assign({}, defaultResource),
+      department: Object.assign({}, defaultDepartment),
       isEdit: false,
       categoryOptions:[],
       defaultCategoryId:null
@@ -150,7 +149,6 @@ export default {
   },
   created() {
     this.getList();
-    this.getCateList();
   },
   filters: {
     formatDateTime(time) {
@@ -181,16 +179,16 @@ export default {
     handleAdd() {
       this.dialogVisible = true;
       this.isEdit = false;
-      this.resource = Object.assign({},defaultResource);
-      this.resource.categoryId = this.defaultCategoryId;
+      this.department = Object.assign({},defaultDepartment);
+      this.department.categoryId = this.defaultCategoryId;
     },
     handleDelete(index, row) {
-      this.$confirm('是否要删除该资源?', '提示', {
+      this.$confirm('是否要删除该部门?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteResource(row.id).then(response => {
+        deleteDepartment(row.id).then(response => {
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -202,7 +200,7 @@ export default {
     handleUpdate(index, row) {
       this.dialogVisible = true;
       this.isEdit = true;
-      this.resource = Object.assign({},row);
+      this.department = Object.assign({},row);
     },
     handleDialogConfirm() {
       this.$confirm('是否要确认?', '提示', {
@@ -211,7 +209,7 @@ export default {
         type: 'warning'
       }).then(() => {
         if (this.isEdit) {
-          updateResource(this.resource.id,this.resource).then(response => {
+          updateDepartment(this.department.id,this.department).then(response => {
             this.$message({
               message: '修改成功！',
               type: 'success'
@@ -220,7 +218,7 @@ export default {
             this.getList();
           })
         } else {
-          createResource(this.resource).then(response => {
+          createDepartment(this.department).then(response => {
             this.$message({
               message: '添加成功！',
               type: 'success'
@@ -232,7 +230,7 @@ export default {
       })
     },
     handleShowCategory(){
-      this.$router.push({path: '/ums/resourceCategory'})
+      this.$router.push({path: '/ums/departmentCategory'})
     },
     getList() {
       this.listLoading = true;
@@ -242,16 +240,6 @@ export default {
         this.total = response.data.total;
       });
     },
-    getCateList(){
-      listAllCate().then(response=>{
-        let cateList = response.data;
-        for(let i=0;i<cateList.length;i++){
-          let cate = cateList[i];
-          this.categoryOptions.push({label:cate.name,value:cate.id});
-        }
-        this.defaultCategoryId=cateList[0].id;
-      })
-    }
   }
 }
 </script>
