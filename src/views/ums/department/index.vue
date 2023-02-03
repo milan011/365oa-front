@@ -21,7 +21,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" label-width="140px" size="small">
           <el-form-item label="部门名称：">
-            <el-input v-model="listQuery.nameKeyword" class="input-width" clearable placeholder="部门名称"></el-input>
+            <el-input v-model="listQuery.keyword" class="input-width" clearable placeholder="部门名称"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -40,10 +40,7 @@
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column align="center" label="部门名称">
-          <template slot-scope="scope">{{scope.row.name}}</template>
-        </el-table-column>
-        <el-table-column align="center" label="部门路径">
-          <template slot-scope="scope">{{scope.row.url}}</template>
+          <template slot-scope="scope">{{scope.row.depname}}</template>
         </el-table-column>
         <el-table-column align="center" label="描述">
           <template slot-scope="scope">{{scope.row.description}}</template>
@@ -86,25 +83,19 @@
                :model="department"
                label-width="150px" size="small">
         <el-form-item label="部门名称：">
-          <el-input v-model="department.name" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="部门路径：">
-          <el-input v-model="department.url" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="部门分类：">
-          <el-select v-model="department.categoryId" clearable placeholder="全部" style="width: 250px">
-            <el-option v-for="item in categoryOptions"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value">
-            </el-option>
-          </el-select>
+          <el-input v-model="department.depname" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="描述：">
           <el-input v-model="department.description"
                     :rows="5"
                     style="width: 250px"
                     type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用：">
+          <el-radio-group v-model="department.status">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -117,19 +108,17 @@
 <script>
 import {fetchList,createDepartment,updateDepartment,deleteDepartment} from '@/api/department';
 import {formatDate} from '@/utils/date';
+import {deleteRole, updateStatus} from "@/api/role";
 
 const defaultListQuery = {
   pageNum: 1,
   pageSize: 10,
-  nameKeyword: null,
-  urlKeyword: null,
-  categoryId:null
+  keyword: null,
 };
 const defaultDepartment = {
   id: null,
-  name: null,
-  url: null,
-  categoryId: null,
+  depname: null,
+  status: 1,
   description:''
 };
 export default {
@@ -180,7 +169,26 @@ export default {
       this.dialogVisible = true;
       this.isEdit = false;
       this.department = Object.assign({},defaultDepartment);
-      this.department.categoryId = this.defaultCategoryId;
+    },
+    handleStatusChange(index, row) {
+      /*this.$confirm('是否要修改该状态?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        updateStatus(row.id, {status: row.status}).then(response => {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消修改'
+        });
+        this.getList();
+      });*/
     },
     handleDelete(index, row) {
       this.$confirm('是否要删除该部门?', '提示', {
@@ -188,7 +196,11 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteDepartment(row.id).then(response => {
+        let ids = [];
+        ids.push(row.id);
+        let params=new URLSearchParams();
+        params.append("ids",ids);
+        deleteDepartment(params).then(response => {
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -228,9 +240,6 @@ export default {
           })
         }
       })
-    },
-    handleShowCategory(){
-      this.$router.push({path: '/ums/departmentCategory'})
     },
     getList() {
       this.listLoading = true;
