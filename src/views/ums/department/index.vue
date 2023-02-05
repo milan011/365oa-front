@@ -48,6 +48,16 @@
         <el-table-column align="center" label="添加时间" width="160">
           <template slot-scope="scope">{{scope.row.createTime | formatDateTime}}</template>
         </el-table-column>
+        <el-table-column label="是否启用" width="140" align="center">
+          <template slot-scope="scope">
+            <el-switch
+              @change="handleStatusChange(scope.$index, scope.row)"
+              :active-value="1"
+              :inactive-value="0"
+              v-model="scope.row.status">
+            </el-switch>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="140">
           <template slot-scope="scope">
             <el-button size="mini"
@@ -106,9 +116,8 @@
   </div>
 </template>
 <script>
-import {fetchList,createDepartment,updateDepartment,deleteDepartment} from '@/api/department';
+import {fetchList,createDepartment,updateDepartment,deleteDepartment,updateStatus} from '@/api/department';
 import {formatDate} from '@/utils/date';
-import {deleteRole, updateStatus} from "@/api/role";
 
 const defaultListQuery = {
   pageNum: 1,
@@ -171,7 +180,7 @@ export default {
       this.department = Object.assign({},defaultDepartment);
     },
     handleStatusChange(index, row) {
-      /*this.$confirm('是否要修改该状态?', '提示', {
+      this.$confirm('是否要修改该状态?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -188,7 +197,7 @@ export default {
           message: '取消修改'
         });
         this.getList();
-      });*/
+      });
     },
     handleDelete(index, row) {
       this.$confirm('是否要删除该部门?', '提示', {

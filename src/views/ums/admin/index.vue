@@ -72,6 +72,10 @@
             </el-button>
             <el-button size="mini"
                        type="text"
+                       @click="handleSelectDepartment(scope.$index, scope.row)">分配部门
+            </el-button>
+            <el-button size="mini"
+                       type="text"
                        @click="handleUpdate(scope.$index, scope.row)">
               编辑
             </el-button>
@@ -311,6 +315,9 @@
         this.allocAdminId = row.id;
         this.allocDialogVisible = true;
         this.getRoleListByAdmin(row.id);
+      },
+      handleSelectDepartment(index,row){
+        console.log('分配部门')
       },
       getList() {
         this.listLoading = true;

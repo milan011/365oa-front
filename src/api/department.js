@@ -32,6 +32,15 @@ export function deleteDepartment(data) {
   })
 }
 
+
+export function updateStatus(id, params) {
+  return request({
+    url: '/department/updateStatus/' + id,
+    method: 'post',
+    params: params
+  })
+}
+
 export function fetchAllDepartmentList() {
   return request({
     url: '/department/listAll',
