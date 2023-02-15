@@ -364,6 +364,33 @@ export const asyncRouterMap = [
       },
     ]
   },
+  {
+    path:'/ams',
+    component: Layout,
+    redirect: '/ams/processDefine',
+    name: 'ams',
+    meta: {title: '审批', icon: 'ams'},
+    children: [
+      {
+        path: 'processDefine',
+        name: 'processDefine',
+        component: () => import('@/views/ams/process/define/index'),
+        meta: {title: '审批发起', icon: 'ums-department'}
+      },
+      {
+        path: 'processHandle',
+        name: 'processHandle',
+        component: () => import('@/views/ams/process/handle/index'),
+        meta: {title: '审批处理', icon: 'ums-department'}
+      },
+      {
+        path: 'processRecord',
+        name: 'processRecord',
+        component: () => import('@/views/ams/process/record/index'),
+        meta: {title: '审批记录', icon: 'ums-department'}
+      },
+    ]
+  },
   {path: '*', redirect: '/404', hidden: true}
 ]
 
