@@ -378,6 +378,48 @@ export const asyncRouterMap = [
         meta: {title: '审批发起', icon: 'ums-department'}
       },
       {
+        path: 'processReimbursement',
+        name: 'processReimbursement',
+        component: () => import('@/views/ams/process/define/reimbursement'),
+        meta: {title: '报销审批单'},
+        hidden: true
+      },
+      {
+        path: 'processPayApply',
+        name: 'processPayApply',
+        component: () => import('@/views/ams/process/define/payApply'),
+        meta: {title: '付款审批单'},
+        hidden: true
+      },
+      {
+        path: 'processAdvancepay',
+        name: 'processAdvancepay',
+        component: () => import('@/views/ams/process/define/advancepay'),
+        meta: {title: '预付款审批单'},
+        hidden: true
+      },
+      {
+        path: 'processContract',
+        name: 'processContract',
+        component: () => import('@/views/ams/process/define/contract'),
+        meta: {title: '合同审批单'},
+        hidden: true
+      },
+      {
+        path: 'processBuyplan',
+        name: 'processBuyplan',
+        component: () => import('@/views/ams/process/define/buyplan'),
+        meta: {title: '物资采购审批单'},
+        hidden: true
+      },
+      {
+        path: 'processProject',
+        name: 'processProject',
+        component: () => import('@/views/ams/process/define/project'),
+        meta: {title: '工程项目审批单'},
+        hidden: true
+      },
+      {
         path: 'processHandle',
         name: 'processHandle',
         component: () => import('@/views/ams/process/handle/index'),

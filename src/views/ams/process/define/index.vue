@@ -3,39 +3,41 @@
     <div class="type-content">
       <el-row :gutter="20">
         <el-col :span="6">
-          <div class="total-frame">
+          <div @click="toReimbursement" class="total-frame">
             <img :src="img_home_order" class="total-icon">
             <div class="total-title">报销审批单</div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="total-frame">
+          <div @click="toPayApply" class="total-frame">
             <img :src="img_home_order" class="total-icon">
             <div class="total-title">付款审批单</div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="total-frame">
+          <div @click="toAdvancepay" class="total-frame">
             <img :src="img_home_order" class="total-icon">
             <div class="total-title">预付款审批单</div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="total-frame">
+          <div @click="toContract" class="total-frame">
             <img :src="img_home_order" class="total-icon">
             <div class="total-title">合同审批单</div>
           </div>
         </el-col>
       </el-row>
+    </div>
+    <div class="type-content">
       <el-row :gutter="20">
         <el-col :span="6">
-          <div class="total-frame">
+          <div @click="toBuyplan" class="total-frame">
             <img :src="img_home_order" class="total-icon">
             <div class="total-title">物资采购审批单</div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="total-frame">
+          <div @click="toProject" class="total-frame">
             <img :src="img_home_order" class="total-icon">
             <div class="total-title">工程项目付款审批单</div>
           </div>
@@ -62,7 +64,30 @@ export default {
 
   },
   methods: {
-
+    toReimbursement(){
+      console.log('去报销审批单')
+      this.$router.push({path:'/ams/processReimbursement'});
+    },
+    toPayApply(){
+      console.log('去付款审批单')
+      this.$router.push({path:'/ams/processPayApply'});
+    },
+    toAdvancepay(){
+      console.log('去预付款审批单')
+      this.$router.push({path:'/ams/processAdvancepay'});
+    },
+    toContract(){
+      console.log('去合同审批单')
+      this.$router.push({path:'/ams/processContract'});
+    },
+    toBuyplan(){
+      console.log('去物资采购审批单')
+      this.$router.push({path:'/ams/processBuyplan'});
+    },
+    toProject(){
+      console.log('去工程项目审批单')
+      this.$router.push({path:'/ams/processProject'});
+    },
   }
 }
 
@@ -77,6 +102,7 @@ export default {
   border: 1px solid #DCDFE6;
   padding: 20px;
   height: 100px;
+  cursor: pointer;
 }
 .total-icon {
   color: #409EFF;
@@ -89,5 +115,8 @@ export default {
   color: #909399;
   left: 70px;
   top: -45px;
+}
+.type-content{
+  margin: 10px 0;
 }
 </style>
