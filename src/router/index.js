@@ -380,42 +380,42 @@ export const asyncRouterMap = [
       {
         path: 'processReimbursement',
         name: 'processReimbursement',
-        component: () => import('@/views/ams/process/define/reimbursement'),
+        component: () => import('@/views/ams/process/define/reimbursement/index'),
         meta: {title: '报销审批单'},
         hidden: true
       },
       {
         path: 'processPayApply',
         name: 'processPayApply',
-        component: () => import('@/views/ams/process/define/payApply'),
+        component: () => import('@/views/ams/process/define/payApply/index'),
         meta: {title: '付款审批单'},
         hidden: true
       },
       {
         path: 'processAdvancepay',
         name: 'processAdvancepay',
-        component: () => import('@/views/ams/process/define/advancepay'),
+        component: () => import('@/views/ams/process/define/advancepay/index'),
         meta: {title: '预付款审批单'},
         hidden: true
       },
       {
         path: 'processContract',
         name: 'processContract',
-        component: () => import('@/views/ams/process/define/contract'),
+        component: () => import('@/views/ams/process/define/contract/index'),
         meta: {title: '合同审批单'},
         hidden: true
       },
       {
         path: 'processBuyplan',
         name: 'processBuyplan',
-        component: () => import('@/views/ams/process/define/buyplan'),
+        component: () => import('@/views/ams/process/define/buyplan/index'),
         meta: {title: '物资采购审批单'},
         hidden: true
       },
       {
         path: 'processProject',
         name: 'processProject',
-        component: () => import('@/views/ams/process/define/project'),
+        component: () => import('@/views/ams/process/define/project/index'),
         meta: {title: '工程项目审批单'},
         hidden: true
       },
