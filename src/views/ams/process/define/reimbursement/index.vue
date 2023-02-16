@@ -9,12 +9,18 @@
       v-model="reimParam"
       @nextStep="nextStep">
     </reim-base-info>
+    <reim-details
+      v-show="showStatus[1]"
+      v-model="reimParam"
+      @nextStep="nextStep"
+      @prevStep="prevStep">
+    </reim-details>
   </el-card>
 </template>
 <script>
 import { validatenull } from "@/utils/validate";
 import ReimBaseInfo from './components/ReimBaseInfo';
-// import ReimDetails from './ReimDetails';
+import ReimDetails from './components/ReimDetails';
 
 const defalutReimParam = {
   //流程表数据
@@ -40,8 +46,8 @@ const defalutReimParam = {
 export default {
   name: 'Reimbursement',
   components: { //子组件
+    ReimDetails,
     ReimBaseInfo,
-    // ReimDetails
   },
   data() {
     return {
