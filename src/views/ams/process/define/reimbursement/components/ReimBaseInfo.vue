@@ -1,11 +1,58 @@
 <template>
   <div class="app-container reim-base-ifno">
     <el-form :model="value" :rules="rules" ref="reimInfoForm" label-width="120px" class="form-inner-container" size="small">
+      <el-form-item label="标题：" prop="name">
+        <el-input v-model="value.name"></el-input>
+      </el-form-item>
+      <el-form-item label="优先级：" prop="priority">
+        <el-select
+          v-model="value.priority"
+          placeholder="请选择优先级">
+          <el-option
+            v-for="item in prioritysMap"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="审核人：" prop="examineUserId">
+        <el-select
+          v-model="value.examineUserId"
+          placeholder="请选择审核人">
+          <el-option
+            v-for="item in prioritysMap"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="收款方户名：" prop="payPeople">
+        <el-input v-model="value.payPeople"></el-input>
+      </el-form-item>
+      <el-form-item label="开户行：" prop="bankName">
+        <el-input v-model="value.bankName"></el-input>
+      </el-form-item>
+      <el-form-item label="银行账号：" prop="bankAccount">
+        <el-input v-model="value.bankAccount"></el-input>
+      </el-form-item>
+      <el-form-item label="报销事由：" prop="reimReason">
+        <el-input
+          maxlength="100"
+          v-model="value.reimReason"
+          type="textarea"
+          :autoSize="true"></el-input>
+      </el-form-item>
+      <el-form-item style="text-align: center">
+        <el-button type="primary" size="medium" @click="handleNext('reimInfoForm')">下一步，填写报销明细</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
 import { validatenull } from "@/utils/validate";
+import { prioritysMap } from "@/common/dic"
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
 
@@ -32,7 +79,13 @@ export default {
   },
   data() {
     return {
-      rules: {},
+      rules: {
+        name: [
+            {required: true, message: '请输入审批标题', trigger: 'blur'},
+            {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
+          ],
+      },
+      prioritysMap,
     }
   },
   mounted(){
@@ -44,6 +97,20 @@ export default {
   watch:{ //响应数据的变化
   },
   methods: {
+    handleNext(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$emit('nextStep');
+          } else {
+            this.$message({
+              message: '验证失败',
+              type: 'error',
+              duration:1000
+            });
+            return false;
+          }
+        });
+      },
   }
 }
 </script>

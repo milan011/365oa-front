@@ -19,10 +19,10 @@ import ReimBaseInfo from './components/ReimBaseInfo';
 const defalutReimParam = {
   //流程表数据
   name: '',
-  applyUserId: null,
   examineUserId: null,
-  applyTypeId: null,
-  applyTypeName: '',
+  applyTypeId: '1',
+  priority: '1',
+  applyTypeName: '报销单',
   stepsConcent: '',
   remark: '',
   //保修审核数据
