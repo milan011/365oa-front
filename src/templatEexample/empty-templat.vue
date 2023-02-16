@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import { validatenull } from "@/utils/common";
+import { validatenull } from "@/utils/validate";
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
 

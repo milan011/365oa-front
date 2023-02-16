@@ -12,7 +12,7 @@
   </el-card>
 </template>
 <script>
-import { validatenull } from "@/utils/common";
+import { validatenull } from "@/utils/validate";
 import ReimBaseInfo from './components/ReimBaseInfo';
 // import ReimDetails from './ReimDetails';
 
