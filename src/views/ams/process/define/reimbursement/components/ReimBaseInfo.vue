@@ -81,9 +81,24 @@ export default {
     return {
       rules: {
         name: [
-            {required: true, message: '请输入审批标题', trigger: 'blur'},
-            {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
-          ],
+          {required: true, message: '请输入审批标题', trigger: 'blur'},
+          {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
+        ],
+        examineUserId: [
+          {required: true, message: '请选择审核人', trigger: 'blur'}
+        ],
+        payPeople: [
+          {required: true, message: '请输入收款方户名', trigger: 'blur'}
+        ],
+        bankName: [
+          {required: true, message: '请输入开户行', trigger: 'blur'}
+        ],
+        bankAccount: [
+          {required: true, message: '请输入银行账号', trigger: 'blur'}
+        ],
+        reimReason: [
+          {required: true, message: '请输入报销事由', trigger: 'blur'}
+        ]
       },
       prioritysMap,
     }
