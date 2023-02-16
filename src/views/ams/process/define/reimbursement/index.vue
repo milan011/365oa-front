@@ -17,6 +17,25 @@ import ReimBaseInfo from './components/ReimBaseInfo';
 // import ReimDetails from './ReimDetails';
 
 const defalutReimParam = {
+  //流程表数据
+  name: '',
+  applyUserId: null,
+  examineUserId: null,
+  applyTypeId: null,
+  applyTypeName: '',
+  stepsConcent: '',
+  remark: '',
+  //保修审核数据
+  department: '',
+  reimReason: '',
+  reimMoney: 0,
+  uppercase: '',
+  payPeople: '',
+  bankAccount: '',
+  bankName: '',
+  billNum: 0,
+  //报销明细列表
+  remiDetailsList: [],
 }
 export default {
   name: 'Reimbursement',
