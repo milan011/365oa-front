@@ -50,8 +50,9 @@
       width="40%">
       <el-form ref="reimDetailsForm"
                :model="reimDetails"
+               :rules="rules"
                label-width="150px" size="small">
-        <el-form-item label="费用日期：">
+        <el-form-item label="费用日期：" prop="happenTime">
           <el-date-picker
             v-model="reimDetails.happenTime"
             type="date"
@@ -88,7 +89,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="handleDialogConfirm()">确 定</el-button>
+        <el-button size="small" type="primary" @click="handleDialogConfirm('reimDetailsForm')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -168,6 +169,11 @@ export default {
       listLoading: false,
       dialogVisible: false,
       reimCourseValue: [],
+      rules: {
+        happenTime: [
+          {required: true, message: '请选择费用日期', trigger: 'blur'},
+        ],
+      },
       reimCourseOptions,
       selectReimPics: [],
       pickerOptions1: {
@@ -190,6 +196,7 @@ export default {
       this.dialogVisible = true;
       this.isEdit = false;
       this.reimDetails = Object.assign({}, defaultReimDetails);
+      this.reimCourseValue = []
     },
     handleDelete(index, row) {
       this.$confirm('是否要删除该明细?', '提示', {
@@ -210,33 +217,19 @@ export default {
         });*/
       });
     },
-    handleDialogConfirm(){
-      this.$confirm('是否要确认?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        console.log('添加明细')
-        /*if (this.isEdit) {
-          updateDepartment(this.department.id,this.department).then(response => {
-            this.$message({
-              message: '修改成功！',
-              type: 'success'
-            });
-            this.dialogVisible =false;
-            this.getList();
-          })
+    handleDialogConfirm(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log('我添加明细', _this.reimDetails)
         } else {
-          createDepartment(this.department).then(response => {
-            this.$message({
-              message: '添加成功！',
-              type: 'success'
-            });
-            this.dialogVisible =false;
-            this.getList();
-          })
-        }*/
-      })
+          this.$message({
+            message: '验证失败',
+            type: 'error',
+            duration:1000
+          });
+          return false;
+        }
+      });
     },
     handleUpdate(index, row) {
       /*this.dialogVisible = true;

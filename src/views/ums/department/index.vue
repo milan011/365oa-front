@@ -115,6 +115,7 @@
     </el-dialog>
   </div>
 </template>
+<!--suppress JSUnusedLocalSymbols -->
 <script>
 import {fetchList,createDepartment,updateDepartment,deleteDepartment,updateStatus} from '@/api/department';
 import {formatDate} from '@/utils/date';
