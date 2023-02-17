@@ -13,7 +13,8 @@
       v-show="showStatus[1]"
       v-model="reimParam"
       @nextStep="nextStep"
-      @prevStep="prevStep">
+      @prevStep="prevStep"
+      @finishCommit="finishCommit">
     </reim-details>
   </el-card>
 </template>
@@ -81,6 +82,34 @@ export default {
         this.showStatus[this.active] = true;
       }
     },
+    finishCommit() {
+        this.$confirm('是否要提交审核', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          console.log('提交审核')
+          /*if(isEdit){
+            updateProduct(this.$route.query.id,this.productParam).then(response=>{
+              this.$message({
+                type: 'success',
+                message: '提交成功',
+                duration:1000
+              });
+              this.$router.back();
+            });
+          }else{
+            createProduct(this.productParam).then(response=>{
+              this.$message({
+                type: 'success',
+                message: '提交成功',
+                duration:1000
+              });
+              location.reload();
+            });
+          }*/
+        })
+      }
   }
 }
 

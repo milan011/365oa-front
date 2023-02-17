@@ -40,13 +40,55 @@
         </el-table-column>
       </el-table>
     </div>
+    <div class="submit-button">
+      <el-button size="medium" @click="handlePrev">上一步，填写基本信息</el-button>
+      <el-button type="primary" size="medium" @click="handleFinishCommit">完成，提交审核</el-button>
+    </div>
+    <el-dialog
+      :title="isEdit?'编辑细则':'添加细则'"
+      :visible.sync="dialogVisible"
+      width="40%">
+      <el-form ref="reimDetailsForm"
+               :model="reimDetails"
+               label-width="150px" size="small">
+        <el-form-item label="费用日期：">
+          <el-input v-model="reimDetails.happenTime" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="费用科目：">
+          <el-input v-model="reimDetails.reimCourse" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="费用说明：">
+          <el-input v-model="reimDetails.reimExplain" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="报销金额：">
+          <el-input v-model="reimDetails.reimMoney" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="大写金额：">
+          <el-input v-model="reimDetails.uppercase" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="上传票据：">
+          <el-input v-model="reimDetails.billList" style="width: 250px"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="handleDialogConfirm()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { validatenull } from "@/utils/validate";
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
-
+const defaultReimDetails = {
+  happenTime: null,
+  reimCourse: '',
+  reimExplain: '',
+  billList: '',
+  reimMoney: 0,
+  uppercase: '',
+}
 export default {
   name: 'RemiDetails', //vue组件名称
   components: { //子组件
@@ -67,6 +109,8 @@ export default {
   data() {
     return {
       list: [],
+      isEdit: false,
+      reimDetails: Object.assign({},defaultReimDetails),
       listLoading: false,
       dialogVisible: false,
     }
@@ -81,9 +125,9 @@ export default {
   },
   methods: {
     handleAdd() {
-      /*this.dialogVisible = true;
+      this.dialogVisible = true;
       this.isEdit = false;
-      this.department = Object.assign({},defaultDepartment);*/
+      this.reimDetails = Object.assign({}, defaultReimDetails);
     },
     handleDelete(index, row) {
       this.$confirm('是否要删除该明细?', '提示', {
@@ -104,15 +148,53 @@ export default {
         });*/
       });
     },
+    handleDialogConfirm(){
+      this.$confirm('是否要确认?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log('添加明细')
+        /*if (this.isEdit) {
+          updateDepartment(this.department.id,this.department).then(response => {
+            this.$message({
+              message: '修改成功！',
+              type: 'success'
+            });
+            this.dialogVisible =false;
+            this.getList();
+          })
+        } else {
+          createDepartment(this.department).then(response => {
+            this.$message({
+              message: '添加成功！',
+              type: 'success'
+            });
+            this.dialogVisible =false;
+            this.getList();
+          })
+        }*/
+      })
+    },
     handleUpdate(index, row) {
       /*this.dialogVisible = true;
       this.isEdit = true;
-      this.department = Object.assign({},row);*/
+      this.reimDetails = Object.assign({},row);*/
     },
+    handlePrev(){
+      this.$emit('prevStep')
+    },
+    handleFinishCommit(){
+      this.$emit('finishCommit');
+    }
   }
 }
 </script>
 <style scoped>
+.submit-button{
+  margin-top: 15px;
+  text-align: center;
+}
 </style>
 <style lang="scss" scoped>
 .remi-details{
