@@ -52,22 +52,38 @@
                :model="reimDetails"
                label-width="150px" size="small">
         <el-form-item label="费用日期：">
-          <el-input v-model="reimDetails.happenTime" style="width: 250px"></el-input>
+          <el-date-picker
+            v-model="reimDetails.happenTime"
+            type="date"
+            :picker-options="pickerOptions1"
+            placeholder="选择费用日期">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="费用科目：">
-          <el-input v-model="reimDetails.reimCourse" style="width: 250px"></el-input>
+          <!--<el-input v-model="reimDetails.reimCourse" style="width: 250px"></el-input>-->
+          <el-cascader
+            v-model="reimCourseValue"
+            :options="reimCourseOptions">
+          </el-cascader>
         </el-form-item>
         <el-form-item label="费用说明：">
           <el-input v-model="reimDetails.reimExplain" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="报销金额：">
-          <el-input v-model="reimDetails.reimMoney" style="width: 250px"></el-input>
+          <!--<el-input v-model="reimDetails.reimMoney" style="width: 250px"></el-input>-->
+          <el-input-number
+            v-model="reimDetails.reimMoney"
+            controls-position="right"
+            @change="reimMoneyChange"
+            :precision="2"
+            :min="1"></el-input-number>
         </el-form-item>
         <el-form-item label="大写金额：">
-          <el-input v-model="reimDetails.uppercase" style="width: 250px"></el-input>
+          <el-input readonly v-model="reimDetails.uppercase" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="上传票据：">
-          <el-input v-model="reimDetails.billList" style="width: 250px"></el-input>
+          <!--<el-input v-model="reimDetails.billList" style="width: 250px"></el-input>-->
+          <multi-upload v-model="selectReimPics"></multi-upload>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -79,6 +95,9 @@
 </template>
 <script>
 import { validatenull } from "@/utils/validate";
+import { reimCourseOptions } from "@/common/dic"
+import { changeToChinese } from "@/utils/common"
+import MultiUpload from '@/components/Upload/multiUpload'
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
 const defaultReimDetails = {
@@ -86,12 +105,13 @@ const defaultReimDetails = {
   reimCourse: '',
   reimExplain: '',
   billList: '',
-  reimMoney: 0,
-  uppercase: '',
+  reimMoney: 1,
+  uppercase: '壹元整',
 }
 export default {
   name: 'RemiDetails', //vue组件名称
   components: { //子组件
+    MultiUpload
   },
   computed: {
     ...mapGetters([
@@ -101,6 +121,40 @@ export default {
       // return this.$router.options.routes
       return this.routers
     },
+    selectProductPics:{
+        get:function () {
+          /*let pics=[];
+          if(this.value.pic===undefined||this.value.pic==null||this.value.pic===''){
+            return pics;
+          }
+          pics.push(this.value.pic);
+          if(this.value.albumPics===undefined||this.value.albumPics==null||this.value.albumPics===''){
+            return pics;
+          }
+          let albumPics = this.value.albumPics.split(',');
+          for(let i=0;i<albumPics.length;i++){
+            pics.push(albumPics[i]);
+          }
+          return pics;*/
+        },
+        /*set:function (newValue) {
+          if (newValue == null || newValue.length === 0) {
+            this.value.pic = null;
+            this.value.albumPics = null;
+          } else {
+            this.value.pic = newValue[0];
+            this.value.albumPics = '';
+            if (newValue.length > 1) {
+              for (let i = 1; i < newValue.length; i++) {
+                this.value.albumPics += newValue[i];
+                if (i !== newValue.length - 1) {
+                  this.value.albumPics += ',';
+                }
+              }
+            }
+          }
+        }*/
+      }
   },
   created() {
     _this = this //_this固定指向vue对象,避免多层this
@@ -113,6 +167,14 @@ export default {
       reimDetails: Object.assign({},defaultReimDetails),
       listLoading: false,
       dialogVisible: false,
+      reimCourseValue: [],
+      reimCourseOptions,
+      selectReimPics: [],
+      pickerOptions1: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      }
     }
   },
   mounted(){
@@ -186,6 +248,10 @@ export default {
     },
     handleFinishCommit(){
       this.$emit('finishCommit');
+    },
+    reimMoneyChange(event){
+      console.log('金额修改', this.reimDetails.reimMoney)
+      this.reimDetails.uppercase  = changeToChinese(this.reimDetails.reimMoney)
     }
   }
 }
