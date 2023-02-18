@@ -8,7 +8,7 @@
     <div class="table-container">
       <el-table ref="detailsTable"
                 v-loading="listLoading"
-                :data="list"
+                :data="billList"
                 border style="width: 100%;">
         <el-table-column align="center" label="费用日期">
           <template slot-scope="scope">{{scope.row.happenTime}}</template>
@@ -23,7 +23,7 @@
           <template slot-scope="scope">{{scope.row.reimMoney}}</template>
         </el-table-column>
         <el-table-column align="center" label="大写金额">
-          <template slot-scope="scope">{{scope.row.reimMoney}}</template>
+          <template slot-scope="scope">{{scope.row.uppercase}}</template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="140">
           <template slot-scope="scope">
@@ -57,20 +57,21 @@
             v-model="reimDetails.happenTime"
             type="date"
             :picker-options="pickerOptions1"
+            value-format="yyyy:MM:dd"
             placeholder="选择费用日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="费用科目：">
+        <el-form-item label="费用科目：" prop="reimCourse">
           <!--<el-input v-model="reimDetails.reimCourse" style="width: 250px"></el-input>-->
           <el-cascader
             v-model="reimCourseValue"
             :options="reimCourseOptions">
           </el-cascader>
         </el-form-item>
-        <el-form-item label="费用说明：">
+        <el-form-item label="费用说明：" prop="reimExplain">
           <el-input v-model="reimDetails.reimExplain" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item label="报销金额：">
+        <el-form-item label="报销金额：" prop="reimMoney">
           <!--<el-input v-model="reimDetails.reimMoney" style="width: 250px"></el-input>-->
           <el-input-number
             v-model="reimDetails.reimMoney"
@@ -105,12 +106,15 @@ const defaultReimDetails = {
   happenTime: null,
   reimCourse: '',
   reimExplain: '',
-  billList: '',
+  // billList: '',
   reimMoney: 1,
   uppercase: '壹元整',
 }
 export default {
   name: 'RemiDetails', //vue组件名称
+  props: {
+    value: Object,
+  },
   components: { //子组件
     MultiUpload
   },
@@ -163,7 +167,7 @@ export default {
   },
   data() {
     return {
-      list: [],
+      billList: [],
       isEdit: false,
       reimDetails: Object.assign({},defaultReimDetails),
       listLoading: false,
@@ -172,6 +176,15 @@ export default {
       rules: {
         happenTime: [
           {required: true, message: '请选择费用日期', trigger: 'blur'},
+        ],
+        reimCourse: [
+          {required: true, message: '请选择报销科目', trigger: 'blur'},
+        ],
+        reimExplain: [
+          {required: true, message: '请输入费用说明', trigger: 'blur'},
+        ],
+        reimMoney: [
+          {required: true, message: '请填写费用金额', trigger: 'blur'},
         ],
       },
       reimCourseOptions,
@@ -190,6 +203,18 @@ export default {
     //<keep-alive>包裹的动态组件会被缓存,当组件在 <keep-alive> 内被切换，它的 activated 和 deactivated 这两个生命周期钩子函数将会被对应执行。
   },
   watch:{ //响应数据的变化
+    //费用科目处理
+    reimCourseValue: function (newValue) {
+      if (newValue != null && newValue.length === 2) {
+        let currentValue = newValue[1];
+        this.reimDetails.reimCourse = this.getCateNameById(currentValue);
+        // this.reimDetails.reimCourse = newValue[1];
+        // this.reimDetails.reimCourseName= this.getCateNameById(this.reimDetails.reimCourse);
+      } else {
+        this.reimDetails.reimCourse = null;
+        // this.reimDetails.reimCourseName=null;
+      }
+    }
   },
   methods: {
     handleAdd() {
@@ -204,23 +229,21 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        /*let ids = [];
-        ids.push(row.id);
-        let params=new URLSearchParams();
-        params.append("ids",ids);
-        deleteDepartment(params).then(response => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-          this.getList();
-        });*/
+        _this.billList.splice(index, 1)
       });
     },
     handleDialogConfirm(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('我添加明细', _this.reimDetails)
+          if(_this.isEdit){
+            console.log('我编辑明细', _this.reimDetails)
+            let needModify = _this.currentHandleIndex
+            this.$set(_this.billList, needModify, _this.reimDetails)
+          }else{
+            console.log('我添加明细', _this.reimDetails)
+            _this.billList.push(_this.reimDetails)
+          }
+          _this.dialogVisible = false
         } else {
           this.$message({
             message: '验证失败',
@@ -232,20 +255,36 @@ export default {
       });
     },
     handleUpdate(index, row) {
-      /*this.dialogVisible = true;
+      /*console.log('我编辑', index)
+      return false*/
+      this.dialogVisible = true;
       this.isEdit = true;
-      this.reimDetails = Object.assign({},row);*/
+      this.reimDetails = Object.assign({},row);
+      this.currentHandleIndex = index
     },
     handlePrev(){
       this.$emit('prevStep')
     },
     handleFinishCommit(){
+      this.value.remiDetailsList = this.billList
       this.$emit('finishCommit');
     },
     reimMoneyChange(event){
       console.log('金额修改', this.reimDetails.reimMoney)
       this.reimDetails.uppercase  = changeToChinese(this.reimDetails.reimMoney)
-    }
+    },
+    getCateNameById(id){
+      let name=null;
+      for(let i=0;i<this.reimCourseOptions.length;i++){
+        for(let j=0;j<this.reimCourseOptions[i].children.length;j++){
+          if(this.reimCourseOptions[i].children[j].value===id){
+            name=this.reimCourseOptions[i].children[j].label;
+            return name;
+          }
+        }
+      }
+      return name;
+    },
   }
 }
 </script>

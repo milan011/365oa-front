@@ -30,71 +30,71 @@ export const reimCourseOptions = [
     label: '第三方采购费',
     children:[
       {
-        value: 'travel',
+        value: 'buy',
         label: '采购费',
       },
       {
-        value: 'travel',
+        value: 'outPay',
         label: '外包费',
       }
     ]
   },
   {
-    value: 'forThree',
+    value: 'forManage',
     label: '管理费用',
     children:[
       {
-        value: 'travel',
+        value: 'house',
         label: '房租',
       },
       {
-        value: 'travel',
+        value: 'warter',
         label: '水费',
       },
       {
-        value: 'travel',
+        value: 'print',
         label: '印刷费',
       },
       {
-        value: 'travel',
+        value: 'electric',
         label: '电费',
       }
     ]
   },
   {
-    value: 'forThree',
+    value: 'forPromise',
     label: '投标保证金',
     children:[
       {
-        value: 'travel',
+        value: 'promise',
         label: '投标保证金',
       },
     ]
   },
   {
-    value: 'forThree',
+    value: 'forSale',
     label: '销售费用',
     children:[
       {
-        value: 'travel',
+        value: 'oil',
         label: '油费',
       },
       {
-        value: 'travel',
+        value: 'trafic',
         label: '交通费',
       },
       {
-        value: 'travel',
+        value: 'serve',
         label: '招待费',
       },
     ]
   },
   {
-    value: 'forThree',
+    value: 'forAdvance',
     label: '预付款',
     children:[
       {
-        value: 'travel',
+        value: 'advance',
         label: '预付款',
       },
     ]

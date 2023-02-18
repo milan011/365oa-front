@@ -88,7 +88,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log('提交审核')
+          console.log('提交审核', this.reimParam)
           /*if(isEdit){
             updateProduct(this.$route.query.id,this.productParam).then(response=>{
               this.$message({
