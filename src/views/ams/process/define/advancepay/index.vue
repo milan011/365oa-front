@@ -25,7 +25,7 @@
       <el-form-item label="大写金额：">
         <el-input readonly v-model="formData.uppercase" style="width: 250px"></el-input>
       </el-form-item>
-      <el-form-item label="报账类型：" prop="payType">
+      <el-form-item label="报账类型：" prop="typeId">
         <el-select
           v-model="formData.typeId"
           placeholder="请选择报账类型">
