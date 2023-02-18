@@ -1,6 +1,33 @@
 <template>
   <el-card class="form-container" shadow="never">
     <el-form :model="formData" :rules="rules" ref="advancepayForm" label-width="120px">
+      <el-form-item label="标题：" prop="name">
+        <el-input v-model="formData.name"></el-input>
+      </el-form-item>
+      <el-form-item label="优先级：" prop="priority">
+        <el-select
+          v-model="formData.priority"
+          placeholder="请选择优先级">
+          <el-option
+            v-for="item in prioritysMap"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="审核人：" prop="examineUserId">
+        <el-select
+          v-model="formData.examineUserId"
+          placeholder="请选择审核人">
+          <el-option
+            v-for="item in prioritysMap"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="收款单位：" prop="collectionCompnay">
         <el-input v-model="formData.collectionCompnay"></el-input>
       </el-form-item>
@@ -51,9 +78,14 @@
 </template>
 <script>
 import {formatDate} from "@/utils/date";
-import { reimburseTypeMap } from "@/common/dic"
+import {prioritysMap, reimburseTypeMap} from "@/common/dic"
 import {changeToChinese} from "@/utils/common";
 const defaultFormData = {
+  name: '',
+  examineUserId: null,
+  applyTypeId: '1',
+  applyTypeName: '报销单',
+  priority: '1',
   collectionCompnay: '',
   invoiceCompnay: '',
   payMoney: 1,
@@ -70,6 +102,13 @@ export default {
       sendLoading: false,
       formData: Object.assign({}, defaultFormData),
       rules: {
+        name: [
+          {required: true, message: '请输入审批标题', trigger: 'blur'},
+          {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
+        ],
+        examineUserId: [
+          {required: true, message: '请选择审核人', trigger: 'blur'}
+        ],
         collectionCompnay: [
           {required: true, message: '请输入收款单位', trigger: 'blur'},
           {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'},
@@ -91,6 +130,7 @@ export default {
         ],
       },
       reimburseTypeMap,
+      prioritysMap,
     }
   },
   created() {

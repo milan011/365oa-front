@@ -1,6 +1,33 @@
 <template>
   <el-card class="form-container" shadow="never">
     <el-form :model="formData" :rules="rules" ref="contractForm" label-width="120px">
+      <el-form-item label="标题：" prop="name">
+        <el-input v-model="formData.name"></el-input>
+      </el-form-item>
+      <el-form-item label="优先级：" prop="priority">
+        <el-select
+          v-model="formData.priority"
+          placeholder="请选择优先级">
+          <el-option
+            v-for="item in prioritysMap"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="审核人：" prop="examineUserId">
+        <el-select
+          v-model="formData.examineUserId"
+          placeholder="请选择审核人">
+          <el-option
+            v-for="item in prioritysMap"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="发起依据：" prop="launchBasis">
         <el-input v-model="formData.launchBasis"></el-input>
       </el-form-item>
@@ -40,7 +67,13 @@
 <script>
 import {formatDate} from "@/utils/date";
 import {changeToChinese} from "@/utils/common";
+import {prioritysMap} from "@/common/dic";
 const defaultFormData = {
+  name: '',
+  examineUserId: null,
+  applyTypeId: '1',
+  applyTypeName: '报销单',
+  priority: '1',
   launchBasis: '',
   contractCode: '',
   contractName: '',
@@ -56,6 +89,13 @@ export default {
       sendLoading: false,
       formData: Object.assign({}, defaultFormData),
       rules: {
+        name: [
+          {required: true, message: '请输入审批标题', trigger: 'blur'},
+          {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
+        ],
+        examineUserId: [
+          {required: true, message: '请选择审核人', trigger: 'blur'}
+        ],
         launchBasis: [
           {required: true, message: '请输入发起依据', trigger: 'blur'},
           {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'},
@@ -79,6 +119,7 @@ export default {
           {required: true, message: '请填写合同基本内容', trigger: 'blur'},
         ],
       },
+      prioritysMap,
     }
   },
   created() {
