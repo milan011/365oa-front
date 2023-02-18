@@ -4,7 +4,7 @@
 	<el-form :model="formData" :rules="rules" ref="exampleForm" label-width="120px">
 		<!-- input框 -->
 		<el-form-item label="名称：" prop="name">
-       <el-input v-model="formData.name"></el-input>
+      <el-input v-model="formData.name"></el-input>
     </el-form-item>
     <!-- select框 -->
     <el-form-item label="分类：" prop="typeId">
@@ -91,7 +91,7 @@
     </el-form-item>
     <el-form-item style="text-align: center">
       <el-button size="medium" @click="handleCancle">取消</el-button>
-      <el-button :loading="sendLoading" type="primary" size="medium" @click="finishCommit">提交</el-button>
+      <el-button :loading="sendLoading" type="primary" size="medium" @click="finishCommit('exampleForm')">提交</el-button>
     </el-form-item>
 	</el-form>
 </template>
@@ -235,7 +235,7 @@
   		handleCancle(){
       	this.$router.back();
     	}
-  		finishCommit(){
+  		finishCommit(formName){
   			this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$confirm('是否提交数据', '提示', {
