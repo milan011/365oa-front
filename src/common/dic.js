@@ -100,3 +100,17 @@ export const reimCourseOptions = [
     ]
   },
 ]
+//报账类型
+export const reimburseTypeMap = [
+  {value: '1',label: '发票'},
+  {value: '2',label: '实物收据'},
+  {value: '3',label: '提货单'},
+  {value: '4',label: '送货单'},
+  {value: '5',label: '发货单'},
+  {value: '6',label: '运单'},
+  {value: '99',label: '其它'},
+];
+//付款方式
+export const payTypeMap = [
+  {value: '1',label: '银行转账'},
+];

@@ -1,6 +1,5 @@
-
 'use strict'
-const path = require('path')
+/*const path = require('path')
 
 function resolve(dir) {
   return path.join(__dirname, '.', dir)
@@ -21,4 +20,12 @@ module.exports = {
       // '@utils': resolve('src/utils')
     }
   }
-}
+}*/
+
+module.exports = {
+    resolve: {
+        alias: {
+            "@": require("path").resolve(__dirname, "src")
+        }
+    }
+};

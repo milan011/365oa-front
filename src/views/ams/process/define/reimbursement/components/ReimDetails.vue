@@ -99,7 +99,7 @@
 import { validatenull } from "@/utils/validate";
 import { reimCourseOptions } from "@/common/dic"
 import { changeToChinese } from "@/utils/common"
-import MultiUpload from '@/components/Upload/multiUpload'
+import MultiUpload  from '@/components/Upload/multiUpload'
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
 const defaultReimDetails = {
