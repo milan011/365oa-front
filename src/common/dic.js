@@ -114,3 +114,12 @@ export const reimburseTypeMap = [
 export const payTypeMap = [
   {value: '1',label: '银行转账'},
 ];
+//商品单位
+export const goodsUnitMap = [
+  {value: '个',label: '个'},
+  {value: '块',label: '块'},
+  {value: '瓶',label: '瓶'},
+  {value: '桶',label: '桶'},
+  {value: '米',label: '米'},
+  {value: '升',label: '升'},
+];

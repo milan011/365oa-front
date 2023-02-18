@@ -51,67 +51,70 @@
       :title="isEdit?'编辑细则':'添加细则'"
       :visible.sync="dialogVisible"
       width="40%">
-      <el-form ref="reimDetailsForm"
-               :model="reimDetails"
+      <el-form ref="planDetailsForm"
+               :model="planDetails"
                :rules="rules"
                label-width="150px" size="small">
         <el-form-item label="物资名称：" prop="goodsName">
-          <el-date-picker
-            v-model="reimDetails.goodsName"
-            type="date"
-            :picker-options="pickerOptions1"
-            value-format="yyyy:MM:dd"
-            placeholder="选择物资名称">
-          </el-date-picker>
+          <el-input v-model="planDetails.goodsName"></el-input>
         </el-form-item>
-        <el-form-item label="费用科目：" prop="reimCourse">
-          <!--<el-input v-model="reimDetails.reimCourse" style="width: 250px"></el-input>-->
-          <el-cascader
-            v-model="reimCourseValue"
-            :options="reimCourseOptions">
-          </el-cascader>
+        <el-form-item label="使用部门/人：" prop="depPerson">
+          <el-input v-model="planDetails.depPerson"></el-input>
         </el-form-item>
-        <el-form-item label="费用说明：" prop="reimExplain">
-          <el-input v-model="reimDetails.reimExplain" style="width: 250px"></el-input>
+        <el-form-item label="商品单位：" prop="goodsUnit">
+          <el-select
+            v-model="planDetails.goodsUnit"
+            placeholder="请选商品单位">
+            <el-option
+              v-for="item in goodsUnitMap"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="报销金额：" prop="reimMoney">
-          <!--<el-input v-model="reimDetails.reimMoney" style="width: 250px"></el-input>-->
+        <el-form-item label="商品数量：" prop="goodsNums">
           <el-input-number
-            v-model="reimDetails.reimMoney"
+            v-model="planDetails.goodsNums"
+            @change="numsOrMoneyChange"
             controls-position="right"
-            @change="reimMoneyChange"
+            :step="1"
+            step-strictly
+            :min="1"></el-input-number>
+        </el-form-item>
+        <el-form-item label="预计单价：" prop="onesMoney">
+          <el-input-number
+            v-model="planDetails.onesMoney"
+            @change="numsOrMoneyChange"
+            controls-position="right"
             :precision="2"
             :min="1"></el-input-number>
         </el-form-item>
-        <el-form-item label="大写金额：">
-          <el-input readonly v-model="reimDetails.uppercase" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="上传票据：">
-          <!--<el-input v-model="reimDetails.buyList" style="width: 250px"></el-input>-->
-          <multi-upload v-model="selectReimPics"></multi-upload>
+        <el-form-item label="计划金额：">
+          <el-input readonly v-model="planDetails.goodsMoney" style="width: 250px"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="handleDialogConfirm('reimDetailsForm')">确 定</el-button>
+        <el-button size="small" type="primary" @click="handleDialogConfirm('planDetailsForm')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
 import { validatenull } from "@/utils/validate";
-import { reimCourseOptions } from "@/common/dic"
+import { goodsUnitMap } from "@/common/dic"
 import { changeToChinese } from "@/utils/common"
 import MultiUpload  from '@/components/Upload/multiUpload'
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
 const defaultReimDetails = {
-  goodsName: null,
-  reimCourse: '',
-  reimExplain: '',
-  // buyList: '',
-  reimMoney: 1,
-  uppercase: '壹元整',
+  goodsName: '',
+  depPerson: '',
+  goodsUnit: '',
+  goodsNums: undefined,
+  onesMoney: undefined,
+  goodsMoney: '',
 }
 export default {
   name: 'PlayDetails', //vue组件名称
@@ -129,40 +132,6 @@ export default {
       // return this.$router.options.routes
       return this.routers
     },
-    selectProductPics:{
-        get:function () {
-          /*let pics=[];
-          if(this.value.pic===undefined||this.value.pic==null||this.value.pic===''){
-            return pics;
-          }
-          pics.push(this.value.pic);
-          if(this.value.albumPics===undefined||this.value.albumPics==null||this.value.albumPics===''){
-            return pics;
-          }
-          let albumPics = this.value.albumPics.split(',');
-          for(let i=0;i<albumPics.length;i++){
-            pics.push(albumPics[i]);
-          }
-          return pics;*/
-        },
-        /*set:function (newValue) {
-          if (newValue == null || newValue.length === 0) {
-            this.value.pic = null;
-            this.value.albumPics = null;
-          } else {
-            this.value.pic = newValue[0];
-            this.value.albumPics = '';
-            if (newValue.length > 1) {
-              for (let i = 1; i < newValue.length; i++) {
-                this.value.albumPics += newValue[i];
-                if (i !== newValue.length - 1) {
-                  this.value.albumPics += ',';
-                }
-              }
-            }
-          }
-        }*/
-      }
   },
   created() {
     _this = this //_this固定指向vue对象,避免多层this
@@ -172,7 +141,7 @@ export default {
     return {
       buyList: [],
       isEdit: false,
-      reimDetails: Object.assign({},defaultReimDetails),
+      planDetails: Object.assign({},defaultReimDetails),
       listLoading: false,
       dialogVisible: false,
       reimCourseValue: [],
@@ -180,23 +149,20 @@ export default {
         goodsName: [
           {required: true, message: '请选择物资名称', trigger: 'blur'},
         ],
-        reimCourse: [
-          {required: true, message: '请选择报销科目', trigger: 'blur'},
+        depPerson: [
+          {required: true, message: '请输入使用部门/人', trigger: 'blur'},
         ],
-        reimExplain: [
-          {required: true, message: '请输入费用说明', trigger: 'blur'},
+        goodsUnit: [
+          {required: true, message: '请选择商品单位', trigger: 'blur'},
         ],
-        reimMoney: [
-          {required: true, message: '请填写费用金额', trigger: 'blur'},
+        goodsNums: [
+          {required: true, message: '请输入商品数量', trigger: 'blur'},
+        ],
+        onesMoney: [
+          {required: true, message: '请输入预计单价', trigger: 'blur'},
         ],
       },
-      reimCourseOptions,
-      selectReimPics: [],
-      pickerOptions1: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        }
-      }
+      goodsUnitMap,
     }
   },
   mounted(){
@@ -206,28 +172,16 @@ export default {
     //<keep-alive>包裹的动态组件会被缓存,当组件在 <keep-alive> 内被切换，它的 activated 和 deactivated 这两个生命周期钩子函数将会被对应执行。
   },
   watch:{ //响应数据的变化
-    //费用科目处理
-    reimCourseValue: function (newValue) {
-      if (newValue != null && newValue.length === 2) {
-        let currentValue = newValue[1];
-        this.reimDetails.reimCourse = this.getCateNameById(currentValue);
-        // this.reimDetails.reimCourse = newValue[1];
-        // this.reimDetails.reimCourseName= this.getCateNameById(this.reimDetails.reimCourse);
-      } else {
-        this.reimDetails.reimCourse = null;
-        // this.reimDetails.reimCourseName=null;
-      }
-    }
   },
   methods: {
     handleAdd() {
       this.dialogVisible = true;
       this.isEdit = false;
-      this.reimDetails = Object.assign({}, defaultReimDetails);
+      this.planDetails = Object.assign({}, defaultReimDetails);
       this.reimCourseValue = []
     },
     handleDelete(index, row) {
-      this.$confirm('是否要删除该明细?', '提示', {
+      this.$confirm('是否要删除该物资?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -239,12 +193,12 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(_this.isEdit){
-            console.log('我编辑明细', _this.reimDetails)
+            console.log('我编辑物资', _this.planDetails)
             let needModify = _this.currentHandleIndex
-            this.$set(_this.buyList, needModify, _this.reimDetails)
+            this.$set(_this.buyList, needModify, _this.planDetails)
           }else{
-            console.log('我添加明细', _this.reimDetails)
-            _this.buyList.push(_this.reimDetails)
+            console.log('我添加物资', _this.planDetails)
+            _this.buyList.push(_this.planDetails)
           }
           _this.dialogVisible = false
         } else {
@@ -262,7 +216,7 @@ export default {
       return false*/
       this.dialogVisible = true;
       this.isEdit = true;
-      this.reimDetails = Object.assign({},row);
+      this.planDetails = Object.assign({},row);
       this.currentHandleIndex = index
     },
     handlePrev(){
@@ -272,21 +226,15 @@ export default {
       this.value.planDetailsList = this.buyList
       this.$emit('finishCommit');
     },
-    reimMoneyChange(event){
-      console.log('金额修改', this.reimDetails.reimMoney)
-      this.reimDetails.uppercase  = changeToChinese(this.reimDetails.reimMoney)
-    },
-    getCateNameById(id){
-      let name=null;
-      for(let i=0;i<this.reimCourseOptions.length;i++){
-        for(let j=0;j<this.reimCourseOptions[i].children.length;j++){
-          if(this.reimCourseOptions[i].children[j].value===id){
-            name=this.reimCourseOptions[i].children[j].label;
-            return name;
-          }
-        }
+    numsOrMoneyChange(event){
+      console.log('金额修改', this.planDetails.goodsNums, this.planDetails.onesMoney)
+      let money = this.planDetails.onesMoney
+      let nums = this.planDetails.goodsNums
+      if(!validatenull(money) && !validatenull(nums)){
+        this.planDetails.goodsMoney  = Math.trunc(money*nums)
+      }else{
+        this.planDetails.goodsMoney = ''
       }
-      return name;
     },
   }
 }
