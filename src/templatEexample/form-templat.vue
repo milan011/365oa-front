@@ -1,4 +1,6 @@
 <template>
+	<!-- <el-form :model="formData" :rules="rules" ref="exampleForm" label-width="120px">
+	</el-form> -->
 	<el-form :model="formData" :rules="rules" ref="exampleForm" label-width="120px">
 		<!-- input框 -->
 		<el-form-item label="名称：" prop="name">
@@ -87,6 +89,10 @@
     <el-form-item label="富文本：">
      	<tinymce :width="595" :height="300" v-model="formData.detailHtml"></tinymce>
     </el-form-item>
+    <el-form-item style="text-align: center">
+      <el-button size="medium" @click="handleCancle">取消</el-button>
+      <el-button :loading="sendLoading" type="primary" size="medium" @click="finishCommit">提交</el-button>
+    </el-form-item>
 	</el-form>
 </template>
 <script>
@@ -159,10 +165,12 @@
 		},
 		data() {
     	return {
+    		sendLoading: false,
     		formData: Object.assign({}, defaultFormData),
     		options: [],
     		selectCascaderValue: [],
 				cascaderOptions: [],
+				isEdit: false,
     		rules: {
     			name: [
             {required: true, message: '请输入名称', trigger: 'blur'},
@@ -223,6 +231,51 @@
           }
         }
         return name;
+  		},
+  		handleCancle(){
+      	this.$router.back();
+    	}
+  		finishCommit(){
+  			this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$confirm('是否提交数据', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+            	this.sendLoading = true
+              /*if (this.isEdit) {
+                updateMenu(this.$route.query.id, this.menu).then(response => {
+                  this.$message({
+                    message: '修改成功',
+                    type: 'success',
+                    duration: 1000
+                  });
+                  this.$router.back();
+                });
+              } else {
+                createMenu(this.menu).then(response => {
+                  this.$refs[formName].resetFields();
+                  this.resetForm(formName);
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success',
+                    duration: 1000
+                  });
+                  this.$router.back();
+                });
+              }*/
+            });
+          } else {
+            this.$message({
+              message: '验证失败',
+              type: 'error',
+              duration: 1000
+            });
+            this.sendLoading = false
+            return false;
+          }
+        });
   		}
   	}
 	}

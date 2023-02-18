@@ -83,33 +83,33 @@ export default {
       }
     },
     finishCommit() {
-        this.$confirm('是否要提交审核', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          console.log('提交审核', this.reimParam)
-          /*if(isEdit){
-            updateProduct(this.$route.query.id,this.productParam).then(response=>{
-              this.$message({
-                type: 'success',
-                message: '提交成功',
-                duration:1000
-              });
-              this.$router.back();
-            });
-          }else{
-            createProduct(this.productParam).then(response=>{
-              this.$message({
-                type: 'success',
-                message: '提交成功',
-                duration:1000
-              });
-              location.reload();
-            });
-          }*/
-        })
-      }
+      this.$confirm('是否要提交审核', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log('提交审核', this.reimParam)
+        /*if(isEdit){
+           updateProduct(this.$route.query.id,this.productParam).then(response=>{
+             this.$message({
+               type: 'success',
+               message: '提交成功',
+               duration:1000
+             });
+             this.$router.back();
+           });
+         }else{
+           createProduct(this.productParam).then(response=>{
+             this.$message({
+               type: 'success',
+               message: '提交成功',
+               duration:1000
+             });
+             location.reload();
+           });
+         }*/
+      })
+    }
   }
 }
 
