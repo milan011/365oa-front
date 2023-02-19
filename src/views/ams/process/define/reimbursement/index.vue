@@ -23,6 +23,8 @@ import { validatenull } from "@/utils/validate";
 import ReimBaseInfo from './components/ReimBaseInfo';
 import ReimDetails from './components/ReimDetails';
 
+import { createReimbursement } from "@/api/ams/process/reimbursement"
+
 const defalutReimParam = {
   //流程表数据
   name: '',
@@ -89,25 +91,14 @@ export default {
         type: 'warning'
       }).then(() => {
         console.log('提交审核', this.reimParam)
-        /*if(isEdit){
-           updateProduct(this.$route.query.id,this.productParam).then(response=>{
-             this.$message({
-               type: 'success',
-               message: '提交成功',
-               duration:1000
-             });
-             this.$router.back();
-           });
-         }else{
-           createProduct(this.productParam).then(response=>{
-             this.$message({
-               type: 'success',
-               message: '提交成功',
-               duration:1000
-             });
-             location.reload();
-           });
-         }*/
+        createReimbursement(this.reimParam).then(response=>{
+          this.$message({
+            type: 'success',
+            message: '提交成功',
+            duration:1000
+          });
+          location.reload();
+        });
       })
     }
   }
