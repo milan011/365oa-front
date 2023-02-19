@@ -39,7 +39,7 @@ export function isEmail (s) {
  * @param {*} s
  */
 export function isBankCard (s) {
-  return /^([1-9]{1})(\d{15}|\d{18})$/.test(s)
+  return /^([1-9])(\d{15}|\d{18})$/.test(s)
 }
 
 /**
@@ -80,7 +80,7 @@ export const vaildatePc = function () {
     "iPad", "iPod"
   ];
   let flag = true;
-  for (var v = 0; v < Agents.length; v++) {
+  for (let v = 0; v < Agents.length; v++) {
     if (userAgentInfo.indexOf(Agents[v]) > 0) {
       flag = false;
       break;

@@ -31,7 +31,7 @@ const defalutPlanParam = {
   priority: '1',
   applyTypeName: '报销单',
   //采购明细列表
-  playDetailsList: [],
+  planDetailsList: [],
 }
 export default {
   name: 'BuyPlan',

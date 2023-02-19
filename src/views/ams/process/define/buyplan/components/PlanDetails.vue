@@ -50,6 +50,7 @@
     <el-dialog
       :title="isEdit?'编辑细则':'添加细则'"
       :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
       width="40%">
       <el-form ref="planDetailsForm"
                :model="planDetails"
@@ -79,6 +80,7 @@
             @change="numsOrMoneyChange"
             controls-position="right"
             :step="1"
+            :precision="0"
             step-strictly
             :min="1"></el-input-number>
         </el-form-item>
@@ -114,7 +116,7 @@ const defaultReimDetails = {
   goodsUnit: '',
   goodsNums: undefined,
   onesMoney: undefined,
-  goodsMoney: '',
+  goodsMoney: undefined,
 }
 export default {
   name: 'PlayDetails', //vue组件名称
@@ -231,7 +233,10 @@ export default {
       let money = this.planDetails.onesMoney
       let nums = this.planDetails.goodsNums
       if(!validatenull(money) && !validatenull(nums)){
-        this.planDetails.goodsMoney  = Math.trunc(money*nums)
+        this.$nextTick(()=>{
+          this.planDetails.goodsNums   = Math.trunc(nums)
+          this.planDetails.goodsMoney  = money * Math.trunc(nums)
+        })
       }else{
         this.planDetails.goodsMoney = ''
       }
