@@ -57,7 +57,7 @@
             v-model="reimDetails.happenTime"
             type="date"
             :picker-options="pickerOptions1"
-            value-format="yyyy:MM:dd"
+            value-format="yyyy-MM-dd"
             placeholder="选择费用日期">
           </el-date-picker>
         </el-form-item>

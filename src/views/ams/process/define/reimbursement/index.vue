@@ -23,7 +23,7 @@ import { validatenull } from "@/utils/validate";
 import ReimBaseInfo from './components/ReimBaseInfo';
 import ReimDetails from './components/ReimDetails';
 
-import { createReimbursement } from "@/api/ams/process/reimbursement"
+import { createReimbursement } from "@/api/ams/process/process"
 
 const defalutReimParam = {
   //流程表数据
