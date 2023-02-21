@@ -5,6 +5,7 @@
       <span>采购列表</span>
       <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
     </el-card>
+    <el-tag style="margin-top: 10px;">费用总金额: {{ playMoneyTotal }} {{ uppercaseTotal }}</el-tag>
     <div class="table-container">
       <el-table ref="detailsTable"
                 v-loading="listLoading"
@@ -111,6 +112,8 @@ import MultiUpload  from '@/components/Upload/multiUpload'
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
 const defaultReimDetails = {
+  proId: null,
+  department: '',
   goodsName: '',
   depPerson: '',
   goodsUnit: '',
@@ -146,13 +149,16 @@ export default {
       planDetails: Object.assign({},defaultReimDetails),
       listLoading: false,
       dialogVisible: false,
-      reimCourseValue: [],
+      playMoneyTotal: 0,
+      uppercaseTotal: '',
       rules: {
         goodsName: [
-          {required: true, message: '请选择物资名称', trigger: 'blur'},
+          {required: true, message: '请输入物资名称', trigger: 'blur'},
+          {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
         ],
         depPerson: [
           {required: true, message: '请输入使用部门/人', trigger: 'blur'},
+          {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
         ],
         goodsUnit: [
           {required: true, message: '请选择商品单位', trigger: 'blur'},
@@ -180,7 +186,6 @@ export default {
       this.dialogVisible = true;
       this.isEdit = false;
       this.planDetails = Object.assign({}, defaultReimDetails);
-      this.reimCourseValue = []
     },
     handleDelete(index, row) {
       this.$confirm('是否要删除该物资?', '提示', {
@@ -191,6 +196,16 @@ export default {
         _this.buyList.splice(index, 1)
       });
     },
+    totalManeyDel(){
+      this.playMoneyTotal = 0
+      this.uppercaseTotal = ''
+      if(this.buyList.length > 0){
+        for (let item of this.buyList){
+          this.playMoneyTotal += item.goodsMoney
+        }
+        this.uppercaseTotal = changeToChinese(this.playMoneyTotal)
+      }
+    },
     handleDialogConfirm(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -198,9 +213,11 @@ export default {
             console.log('我编辑物资', _this.planDetails)
             let needModify = _this.currentHandleIndex
             this.$set(_this.buyList, needModify, _this.planDetails)
+            this.totalManeyDel()
           }else{
             console.log('我添加物资', _this.planDetails)
             _this.buyList.push(_this.planDetails)
+            this.totalManeyDel()
           }
           _this.dialogVisible = false
         } else {
@@ -225,6 +242,14 @@ export default {
       this.$emit('prevStep')
     },
     handleFinishCommit(){
+      if(this.buyList.length == 0){
+        this.$message({
+          message: '请至少添加一条数据',
+          type: 'warning',
+          duration:1000
+        });
+        return false
+      }
       this.value.planDetailsList = this.buyList
       this.$emit('finishCommit');
     },

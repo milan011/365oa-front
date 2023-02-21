@@ -80,12 +80,15 @@
 import {formatDate} from "@/utils/date";
 import {prioritysMap, reimburseTypeMap} from "@/common/dic"
 import {changeToChinese} from "@/utils/common";
+import {createAdvance} from "@/api/ams/process/process"
 const defaultFormData = {
   name: '',
   examineUserId: null,
-  applyTypeId: '1',
-  applyTypeName: '报销单',
+  applyTypeId: '3',
+  applyTypeName: '预付款项报账单',
   priority: '1',
+  stepsConcent: '',
+  remark: '',
   collectionCompnay: '',
   invoiceCompnay: '',
   payMoney: 1,
@@ -148,28 +151,18 @@ export default {
             type: 'warning'
           }).then(() => {
             console.log('提交预付付款审批单', this.formData)
-            // this.sendLoading = true
-            /*if (this.isEdit) {
-              updateMenu(this.$route.query.id, this.menu).then(response => {
-                this.$message({
-                  message: '修改成功',
-                  type: 'success',
-                  duration: 1000
-                });
-                this.$router.back();
+            this.sendLoading = true
+            createAdvance(this.formData).then(response=>{
+              this.$message({
+                type: 'success',
+                message: '提交成功',
+                duration:1000
               });
-            } else {
-              createMenu(this.menu).then(response => {
-                this.$refs[formName].resetFields();
-                this.resetForm(formName);
-                this.$message({
-                  message: '提交成功',
-                  type: 'success',
-                  duration: 1000
-                });
-                this.$router.back();
-              });
-            }*/
+              location.reload();
+              this.sendLoading = false
+            }).catch(()=>{
+              this.sendLoading = false
+            });
           });
         } else {
           this.$message({

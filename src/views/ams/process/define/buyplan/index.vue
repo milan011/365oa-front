@@ -22,14 +22,17 @@
 import { validatenull } from "@/utils/validate";
 import PlanBaseInfo from './components/PlanBaseInfo';
 import PlanDetails from './components/PlanDetails';
+import { createBuyPlay } from "@/api/ams/process/process";
 
 const defalutPlanParam = {
   //流程表数据
   name: '',
   examineUserId: null,
-  applyTypeId: '1',
   priority: '1',
-  applyTypeName: '报销单',
+  applyTypeId: '4',
+  applyTypeName: '采购计划审批单',
+  stepsConcent: '',
+  remark: '',
   //采购明细列表
   planDetailsList: [],
 }
@@ -78,25 +81,14 @@ export default {
         type: 'warning'
       }).then(() => {
         console.log('提交审核', this.planParam)
-        /*if(isEdit){
-           updateProduct(this.$route.query.id,this.productParam).then(response=>{
-             this.$message({
-               type: 'success',
-               message: '提交成功',
-               duration:1000
-             });
-             this.$router.back();
-           });
-         }else{
-           createProduct(this.productParam).then(response=>{
-             this.$message({
-               type: 'success',
-               message: '提交成功',
-               duration:1000
-             });
-             location.reload();
-           });
-         }*/
+        createBuyPlay(this.planParam).then(response=>{
+          this.$message({
+            type: 'success',
+            message: '提交成功',
+            duration:1000
+          });
+          location.reload();
+        });
       })
     }
   }
