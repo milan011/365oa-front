@@ -71,9 +71,24 @@ export function getRoleByAdmin(id) {
   })
 }
 
+export function getDepartmentByAdmin(id) {
+  return request({
+    url: '/admin/department/' + id,
+    method: 'get'
+  })
+}
+
 export function allocRole(data) {
   return request({
     url: '/admin/role/update',
+    method: 'post',
+    data: data
+  })
+}
+
+export function allocDepartment(data) {
+  return request({
+    url: '/admin/department/update',
     method: 'post',
     data: data
   })

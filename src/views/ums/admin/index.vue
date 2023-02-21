@@ -153,11 +153,39 @@
         <el-button type="primary" @click="handleAllocDialogConfirm()" size="small">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="分配部门"
+      :visible.sync="allocDepDialogVisible"
+      width="30%">
+      <el-select v-model="allocDepartmentIds" multiple placeholder="请选择" size="small" style="width: 80%">
+        <el-option
+          v-for="item in allDepartmentList"
+          :key="item.id"
+          :label="item.depname"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="allocDepDialogVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="handleAllocDeptDialogConfirm()" size="small">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-  import {fetchList,createAdmin,updateAdmin,updateStatus,deleteAdmin,getRoleByAdmin,allocRole} from '@/api/login';
+import {
+  fetchList,
+  createAdmin,
+  updateAdmin,
+  updateStatus,
+  deleteAdmin,
+  getRoleByAdmin,
+  allocRole,
+  allocDepartment,
+  getDepartmentByAdmin
+} from '@/api/login';
   import {fetchAllRoleList} from '@/api/role';
+  import {fetchAllDepartmentList} from "@/api/department";
   import {formatDate} from '@/utils/date';
 
   const defaultListQuery = {
@@ -186,14 +214,19 @@
         admin: Object.assign({}, defaultAdmin),
         isEdit: false,
         allocDialogVisible: false,
+        allocDepDialogVisible: false,
         allocRoleIds:[],
         allRoleList:[],
+        allDepartmentList: [],
+        allocDepartmentList: [],
+        allocDepartmentIds: [],
         allocAdminId:null
       }
     },
     created() {
       this.getList();
       this.getAllRoleList();
+      this.getAllDepartmentList()
     },
     filters: {
       formatDateTime(time) {
@@ -316,8 +349,29 @@
         this.allocDialogVisible = true;
         this.getRoleListByAdmin(row.id);
       },
+      handleAllocDeptDialogConfirm(){
+        this.$confirm('是否要确认?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = new URLSearchParams();
+          params.append("adminId", this.allocAdminId);
+          params.append("departmentIds", this.allocDepartmentIds);
+          allocDepartment(params).then(response => {
+            this.$message({
+              message: '分配成功！',
+              type: 'success'
+            });
+            this.allocDepDialogVisible = false;
+          })
+        })
+      },
       handleSelectDepartment(index,row){
         console.log('分配部门')
+        this.allocAdminId = row.id;
+        this.allocDepDialogVisible = true;
+        this.getDepartmentByAdmin(row.id);
       },
       getList() {
         this.listLoading = true;
@@ -339,6 +393,22 @@
           if(allocRoleList!=null&&allocRoleList.length>0){
             for(let i=0;i<allocRoleList.length;i++){
               this.allocRoleIds.push(allocRoleList[i].id);
+            }
+          }
+        });
+      },
+      getAllDepartmentList() {
+        fetchAllDepartmentList().then(response => {
+          this.allDepartmentList = response.data;
+        });
+      },
+      getDepartmentByAdmin(adminId){
+        getDepartmentByAdmin(adminId).then(response => {
+          let allocDepartmentList = response.data;
+          this.allocDepartmentIds=[];
+          if(allocDepartmentList!=null && allocDepartmentList.length>0){
+            for(let i=0;i<allocDepartmentList.length;i++){
+              this.allocDepartmentIds.push(allocDepartmentList[i].id);
             }
           }
         });
