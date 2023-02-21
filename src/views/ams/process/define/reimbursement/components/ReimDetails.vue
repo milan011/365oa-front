@@ -5,6 +5,7 @@
       <span>明细列表</span>
       <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
     </el-card>
+    <el-tag style="margin-top: 10px;">费用总金额: {{ reimMoneyTotal }} {{ uppercaseTotal }}</el-tag>
     <div class="table-container">
       <el-table ref="detailsTable"
                 v-loading="listLoading"
@@ -173,6 +174,8 @@ export default {
       listLoading: false,
       dialogVisible: false,
       reimCourseValue: [],
+      reimMoneyTotal: 0,
+      uppercaseTotal: '',
       rules: {
         happenTime: [
           {required: true, message: '请选择费用日期', trigger: 'blur'},
@@ -230,6 +233,7 @@ export default {
         type: 'warning'
       }).then(() => {
         _this.billList.splice(index, 1)
+        _this.totalManeyDel()
       });
     },
     handleDialogConfirm(formName){
@@ -242,6 +246,7 @@ export default {
           }else{
             console.log('我添加明细', _this.reimDetails)
             _this.billList.push(_this.reimDetails)
+            _this.totalManeyDel()
           }
           _this.dialogVisible = false
         } else {
@@ -253,6 +258,16 @@ export default {
           return false;
         }
       });
+    },
+    totalManeyDel(){
+      this.reimMoneyTotal = 0
+      this.uppercaseTotal = ''
+      if(this.billList.length > 0){
+        for (let item of this.billList){
+          this.reimMoneyTotal += item.reimMoney
+        }
+        this.uppercaseTotal = changeToChinese(this.reimMoneyTotal)
+      }
     },
     handleUpdate(index, row) {
       /*console.log('我编辑', index)
@@ -266,7 +281,17 @@ export default {
       this.$emit('prevStep')
     },
     handleFinishCommit(){
+      if(this.billList.length == 0){
+        this.$message({
+          message: '请至少添加一条明细',
+          type: 'warning',
+          duration:1000
+        });
+        return false
+      }
       this.value.remiDetailsList = this.billList
+      this.value.reimMoney = this.reimMoneyTotal
+      this.value.uppercase = this.uppercaseTotal
       this.$emit('finishCommit');
     },
     reimMoneyChange(event){
