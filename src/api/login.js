@@ -93,3 +93,13 @@ export function allocDepartment(data) {
     data: data
   })
 }
+
+export function fetchExamineUserList(data) {
+  return request({
+    url: '/admin/examineUserList',
+    method: 'post',
+    data: data
+  })
+}
+
+
