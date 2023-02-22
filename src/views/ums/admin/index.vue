@@ -48,6 +48,9 @@
         <el-table-column label="邮箱" align="center">
           <template slot-scope="scope">{{scope.row.email}}</template>
         </el-table-column>
+        <el-table-column label="电话" align="center">
+          <template slot-scope="scope">{{scope.row.telephone}}</template>
+        </el-table-column>
         <el-table-column label="添加时间" width="160" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDateTime}}</template>
         </el-table-column>
@@ -111,6 +114,9 @@
         </el-form-item>
         <el-form-item label="姓名：">
           <el-input v-model="admin.nickName" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="电话：">
+          <el-input v-model="admin.telephone" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="邮箱：">
           <el-input v-model="admin.email" style="width: 250px"></el-input>
@@ -198,6 +204,7 @@ import {
     username: null,
     password: null,
     nickName: null,
+    telephone: null,
     email: null,
     note: null,
     status: 1

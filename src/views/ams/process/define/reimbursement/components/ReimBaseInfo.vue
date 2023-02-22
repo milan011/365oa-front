@@ -16,6 +16,18 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="所属部门：" prop="department">
+        <el-select
+          v-model="value.department"
+          placeholder="请选择所属部门">
+          <el-option
+            v-for="item in allDepartmentList"
+            :key="item.id"
+            :label="item.depname"
+            :value="item.depname">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="审核人：" prop="examineUserId">
         <el-select
           v-model="value.examineUserId"
@@ -53,6 +65,8 @@
 <script>
 import { validatenull } from "@/utils/validate";
 import { prioritysMap } from "@/common/dic"
+import {fetchAllDepartmentList} from "@/api/department";
+import { departmentFilter } from "@/common/commonFun"
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
 
@@ -65,7 +79,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'routers'
+      'routers', 'departments'
     ]),
     routes() {
       // return this.$router.options.routes
@@ -75,14 +89,19 @@ export default {
   created() {
     _this = this //_this固定指向vue对象,避免多层this
     //created生命周期,在模板渲染成html前调用，即通常初始化某些属性值，然后再渲染成视图。
+    this.getAllDepartmentList()
     console.log('当前表单数据', _this.value)
   },
   data() {
     return {
+      allDepartmentList: [],
       rules: {
         name: [
           {required: true, message: '请输入审批标题', trigger: 'blur'},
           {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
+        ],
+        department: [
+          {required: true, message: '请选择所属部门', trigger: 'blur'},
         ],
         examineUserId: [
           {required: true, message: '请选择审核人', trigger: 'blur'}
@@ -113,19 +132,25 @@ export default {
   },
   methods: {
     handleNext(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$emit('nextStep');
-          } else {
-            this.$message({
-              message: '验证失败',
-              type: 'error',
-              duration:1000
-            });
-            return false;
-          }
-        });
-      },
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$emit('nextStep');
+        } else {
+          this.$message({
+            message: '验证失败',
+            type: 'error',
+            duration:1000
+          });
+          return false;
+        }
+      });
+    },
+    getAllDepartmentList() {
+      fetchAllDepartmentList().then(response => {
+        const { data } = response
+        this.allDepartmentList = departmentFilter(data, this.departments)
+      });
+    },
   }
 }
 </script>

@@ -34,7 +34,7 @@ const defalutReimParam = {
   applyTypeName: '报销单',
   stepsConcent: '',
   remark: '',
-  //保修审核数据
+  //报销审核数据
   department: '',
   reimReason: '',
   reimMoney: 0,
