@@ -29,6 +29,7 @@ const defalutReimParam = {
   //流程表数据
   name: '',
   examineUserId: null,
+  departmentId: null,
   applyTypeId: '1',
   priority: '1',
   applyTypeName: '报销单',

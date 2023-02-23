@@ -16,15 +16,28 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="所属部门：" prop="departmentId">
+        <el-select
+          v-model="formData.departmentId"
+          @change="handleChangeDep"
+          placeholder="请选择所属部门">
+          <el-option
+            v-for="item in allDepartmentList"
+            :key="item.id"
+            :label="item.depname"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="审核人：" prop="examineUserId">
         <el-select
           v-model="formData.examineUserId"
           placeholder="请选择审核人">
           <el-option
-            v-for="item in prioritysMap"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in examineUserList"
+            :key="item.id"
+            :label="item.nickName"
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -67,11 +80,17 @@
 <script>
 import {formatDate} from "@/utils/date";
 import {changeToChinese} from "@/utils/common";
+import {fetchAllDepartmentList} from "@/api/department";
+import {fetchExamineUserList} from "@/api/login"
+import { departmentFilter } from "@/common/commonFun"
 import {prioritysMap} from "@/common/dic";
 import {createContract} from "@/api/ams/process/process"
+import {mapGetters} from "vuex";
 const defaultFormData = {
   name: '',
   examineUserId: null,
+  departmentId: null,
+  department: null,
   applyTypeId: '5',
   applyTypeName: '合同会签',
   stepsConcent: '',
@@ -87,9 +106,14 @@ const defaultFormData = {
 }
 export default {
   name: 'PayApply',
+  computed: {
+    ...mapGetters(['departments', "roleIds"]),
+  },
   data() {
     return {
       sendLoading: false,
+      allDepartmentList: [],
+      examineUserList: [],
       formData: Object.assign({}, defaultFormData),
       rules: {
         name: [
@@ -98,6 +122,9 @@ export default {
         ],
         examineUserId: [
           {required: true, message: '请选择审核人', trigger: 'blur'}
+        ],
+        departmentId: [
+          {required: true, message: '请选择所属部门', trigger: 'blur'},
         ],
         launchBasis: [
           {required: true, message: '请输入发起依据', trigger: 'blur'},
@@ -126,6 +153,8 @@ export default {
     }
   },
   created() {
+    this.getAllDepartmentList()
+    this.getExamineUserList()
   },
   filters: {
 
@@ -164,8 +193,38 @@ export default {
         }
       });
     },
+    handleChangeDep(val){
+      let departmentName = '';
+      for (let i = 0; i < this.allDepartmentList.length; i++) {
+        if (this.allDepartmentList[i].id === val) {
+          departmentName = this.allDepartmentList[i].depname;
+          break;
+        }
+      }
+      this.value.department = departmentName;
+    },
     handleCancle(){
       this.$router.back();
+    },
+    getAllDepartmentList() {
+      fetchAllDepartmentList().then(response => {
+        const { data } = response
+        this.allDepartmentList = departmentFilter(data, this.departments)
+      });
+    },
+    getExamineUserList(){
+      /*let params = new URLSearchParams();
+      params.append("roles", this.roles);
+      params.append("departments", this.departments);*/
+      const params = {
+        roleIds: this.roleIds,
+        departments: this.departments
+      }
+      fetchExamineUserList(params).then(response =>{
+        console.log('审核人员列表', response)
+        const { data } = response
+        this.examineUserList = data
+      })
     },
   }
 }

@@ -28,6 +28,8 @@ const defalutPlanParam = {
   //流程表数据
   name: '',
   examineUserId: null,
+  departmentId: null,
+  department: null,
   priority: '1',
   applyTypeId: '4',
   applyTypeName: '采购计划审批单',
@@ -81,6 +83,9 @@ export default {
         type: 'warning'
       }).then(() => {
         console.log('提交审核', this.planParam)
+        for(let item of this.planParam.planDetailsList){
+          item.department = this.planParam.department
+        }
         createBuyPlay(this.planParam).then(response=>{
           this.$message({
             type: 'success',

@@ -16,15 +16,28 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="所属部门：" prop="departmentId">
+        <el-select
+          v-model="formData.departmentId"
+          @change="handleChangeDep"
+          placeholder="请选择所属部门">
+          <el-option
+            v-for="item in allDepartmentList"
+            :key="item.id"
+            :label="item.depname"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="审核人：" prop="examineUserId">
         <el-select
           v-model="formData.examineUserId"
           placeholder="请选择审核人">
           <el-option
-            v-for="item in prioritysMap"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in examineUserList"
+            :key="item.id"
+            :label="item.nickName"
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -81,9 +94,15 @@ import {formatDate} from "@/utils/date";
 import {prioritysMap, reimburseTypeMap} from "@/common/dic"
 import {changeToChinese} from "@/utils/common";
 import {createAdvance} from "@/api/ams/process/process"
+import {fetchAllDepartmentList} from "@/api/department";
+import {fetchExamineUserList} from "@/api/login"
+import { departmentFilter } from "@/common/commonFun"
+import {mapGetters} from "vuex";
 const defaultFormData = {
   name: '',
   examineUserId: null,
+  departmentId: null,
+  department: null,
   applyTypeId: '3',
   applyTypeName: '预付款项报账单',
   priority: '1',
@@ -100,9 +119,14 @@ const defaultFormData = {
 }
 export default {
   name: 'PayApply',
+  computed: {
+    ...mapGetters(['departments', "roleIds"]),
+  },
   data() {
     return {
       sendLoading: false,
+      allDepartmentList: [],
+      examineUserList: [],
       formData: Object.assign({}, defaultFormData),
       rules: {
         name: [
@@ -111,6 +135,9 @@ export default {
         ],
         examineUserId: [
           {required: true, message: '请选择审核人', trigger: 'blur'}
+        ],
+        departmentId: [
+          {required: true, message: '请选择所属部门', trigger: 'blur'},
         ],
         collectionCompnay: [
           {required: true, message: '请输入收款单位', trigger: 'blur'},
@@ -137,6 +164,8 @@ export default {
     }
   },
   created() {
+    this.getAllDepartmentList()
+    this.getExamineUserList()
   },
   filters: {
 
@@ -175,12 +204,42 @@ export default {
         }
       });
     },
+    handleChangeDep(val){
+      let departmentName = '';
+      for (let i = 0; i < this.allDepartmentList.length; i++) {
+        if (this.allDepartmentList[i].id === val) {
+          departmentName = this.allDepartmentList[i].depname;
+          break;
+        }
+      }
+      this.value.department = departmentName;
+    },
     handleCancle(){
       this.$router.back();
     },
     advancepayChange(event){
       console.log('金额修改', this.formData.advancepayMoney)
       this.formData.uppercase  = changeToChinese(this.formData.advancepayMoney)
+    },
+    getAllDepartmentList() {
+      fetchAllDepartmentList().then(response => {
+        const { data } = response
+        this.allDepartmentList = departmentFilter(data, this.departments)
+      });
+    },
+    getExamineUserList(){
+      /*let params = new URLSearchParams();
+      params.append("roles", this.roles);
+      params.append("departments", this.departments);*/
+      const params = {
+        roleIds: this.roleIds,
+        departments: this.departments
+      }
+      fetchExamineUserList(params).then(response =>{
+        console.log('审核人员列表', response)
+        const { data } = response
+        this.examineUserList = data
+      })
     },
   }
 }

@@ -16,15 +16,16 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所属部门：" prop="department">
+      <el-form-item label="所属部门：" prop="departmentId">
         <el-select
-          v-model="value.department"
+          v-model="value.departmentId"
+          @change="handleChangeDep"
           placeholder="请选择所属部门">
           <el-option
             v-for="item in allDepartmentList"
             :key="item.id"
             :label="item.depname"
-            :value="item.depname">
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -103,7 +104,7 @@ export default {
           {required: true, message: '请输入审批标题', trigger: 'blur'},
           {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
         ],
-        department: [
+        departmentId: [
           {required: true, message: '请选择所属部门', trigger: 'blur'},
         ],
         examineUserId: [
@@ -147,6 +148,16 @@ export default {
           return false;
         }
       });
+    },
+    handleChangeDep(val){
+      let departmentName = '';
+      for (let i = 0; i < this.allDepartmentList.length; i++) {
+        if (this.allDepartmentList[i].id === val) {
+          departmentName = this.allDepartmentList[i].depname;
+          break;
+        }
+      }
+      this.value.department = departmentName;
     },
     getAllDepartmentList() {
       fetchAllDepartmentList().then(response => {
