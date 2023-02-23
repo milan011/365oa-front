@@ -33,10 +33,10 @@
           v-model="value.examineUserId"
           placeholder="请选择审核人">
           <el-option
-            v-for="item in prioritysMap"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in examineUserList"
+            :key="item.id"
+            :label="item.nickName"
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -164,6 +164,8 @@ export default {
       }
       fetchExamineUserList(params).then(response =>{
         console.log('审核人员列表', response)
+        const { data } = response
+        this.examineUserList = data
       })
     },
   }
