@@ -103,6 +103,10 @@ export default {
         }, 2000)
       });
     },*/
+    /*exampleRefect(val){
+      let returnObj = this.examplesMap.find(item=>item.value == val)
+      return returnObj ? returnObj.label : ''
+    },*/
   }
 }
 </script>

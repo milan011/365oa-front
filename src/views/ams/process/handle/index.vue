@@ -57,7 +57,17 @@
           <template slot-scope="scope">{{scope.row.depname}}</template>
         </el-table-column>
         <el-table-column label="优先级" align="center">
-          <template slot-scope="scope">{{scope.row.priority}}</template>
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.priority == 1">
+              {{priorityRefect(scope.row.priority)}}
+            </el-tag>
+            <el-tag type="success" v-if="scope.row.priority == 2">
+              {{priorityRefect(scope.row.priority)}}
+            </el-tag>
+            <el-tag type="warning" v-if="scope.row.priority == 3">
+              {{priorityRefect(scope.row.priority)}}
+            </el-tag>
+          </template>
         </el-table-column>
         <el-table-column label="申请人" align="center">
           <template slot-scope="scope">{{scope.row.applyUser}}</template>
@@ -93,7 +103,7 @@
 <script>
 import {formatDate} from "@/utils/date";
 import { fetchList } from "@/api/ams/process/handle";
-import { applyTypesMap } from "@/common/dic"
+import { applyTypesMap, prioritysMap } from "@/common/dic"
 const defaultListQuery = {
   pageNum: 1,
   pageSize: 10,
@@ -105,10 +115,11 @@ export default {
   data() {
     return {
       listQuery: Object.assign({}, defaultListQuery),
-      applyTypesMap,
       processList: [],
       total: null,
       listLoading: false,
+      applyTypesMap,
+      prioritysMap,
     }
   },
   created() {
@@ -151,7 +162,11 @@ export default {
     },
     handleExame(){
 
-    }
+    },
+    priorityRefect(val){
+      let returnObj = this.prioritysMap.find(item=>item.value == val)
+      return returnObj ? returnObj.label : ''
+    },
   }
 }
 
