@@ -51,19 +51,19 @@
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="审批类型" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.apply_type_name}}</template>
         </el-table-column>
         <el-table-column label="所属部门" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.depname}}</template>
         </el-table-column>
         <el-table-column label="优先级" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.priority}}</template>
         </el-table-column>
         <el-table-column label="申请人" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.applyUser}}</template>
         </el-table-column>
         <el-table-column label="申请时间" width="160" align="center">
-          <template slot-scope="scope">{{scope.row.createTime | formatDateTime}}</template>
+          <template slot-scope="scope">{{scope.row.create_time | formatDateTime}}</template>
         </el-table-column>
         <el-table-column label="操作" width="140" align="center">
           <template slot-scope="scope">
