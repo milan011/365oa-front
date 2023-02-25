@@ -426,6 +426,13 @@ export const asyncRouterMap = [
         meta: {title: '审批处理', icon: 'ums-department'}
       },
       {
+        path: 'processDetail',
+        name: 'processDetail',
+        component: () => import('@/views/ams/process/processDetail/index'),
+        meta: {title: '申请详情'},
+        hidden:true
+      },
+      {
         path: 'processRecord',
         name: 'processRecord',
         component: () => import('@/views/ams/process/record/index'),

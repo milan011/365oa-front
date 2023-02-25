@@ -79,7 +79,7 @@
           <template slot-scope="scope">
             <el-button size="mini"
                        type="text"
-                       @click="handleExame(scope.$index, scope.row)">
+                       @click="handleExame(scope.row)">
               查看并审核
             </el-button>
           </template>
@@ -160,8 +160,9 @@ export default {
         this.total = data.total;
       });
     },
-    handleExame(){
-
+    handleExame(row){
+      console.log('查看并审核', row)
+      this.$router.push({path:'/ams/processDetail',query:{id:row.id}})
     },
     priorityRefect(val){
       let returnObj = this.prioritysMap.find(item=>item.value == val)
