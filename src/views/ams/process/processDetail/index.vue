@@ -60,6 +60,7 @@
 <script>
 import { validatenull } from "@/utils/validate";
 import  ReimbursementDetail  from "./components/ReimbursementDetail"
+import { processDetailFetch } from "@/api/ams/process/process"
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
 
@@ -79,7 +80,8 @@ export default {
   },
   created() {
     _this = this //_this固定指向vue对象,避免多层this
-    //created生命周期,在模板渲染成html前调用，即通常初始化某些属性值，然后再渲染成视图。
+    this.currentProcessid = this.$route.query.id;
+    this.getProcessDetail()
   },
   data() {
     return {
@@ -94,6 +96,12 @@ export default {
   watch:{ //响应数据的变化
   },
   methods: {
+    getProcessDetail(){
+      processDetailFetch(this.currentProcessid).then((res)=>{
+        const { data } = res
+        console.log('审核详情', data)
+       })
+    }
   }
 }
 </script>

@@ -111,7 +111,7 @@
         style="width: 100%;margin-top: 20px" border>
         <el-table-column label="商品图片" width="120" align="center">
           <template slot-scope="scope">
-            <img :src="scope.row.productPic" style="height: 80px">
+            <img :src="scope.row.productPic" style="height: 80px" alt="">
           </template>
         </el-table-column>
         <el-table-column label="商品名称" align="center">

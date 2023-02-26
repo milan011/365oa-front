@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+/*获取审批详情*/
+export function processDetailFetch(id) {
+  return request({
+    url: `/process/processDetail?id=${id}`,
+    method: 'get'
+  })
+}
 /*报销审批单创建*/
 export function createReimbursement(data) {
   return request({
