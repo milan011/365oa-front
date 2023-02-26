@@ -5,8 +5,8 @@
         <span style="margin-left: 20px">{{ processData.baseInfo.name }}</span>
         <el-tag>{{ processData.baseInfo.apply_type_name }}</el-tag>
         <div class="operate-button-container">
-          <el-button size="mini">审批通过</el-button>
-          <el-button size="mini">审批驳回</el-button>
+          <el-button @click="processReslove" size="mini">审批通过</el-button>
+          <el-button @click="processReject" size="mini">审批驳回</el-button>
         </div>
       </div>
       <div style="margin-top: 20px">
@@ -60,6 +60,25 @@
         </el-timeline-item>
       </el-timeline>
     </el-card>
+    <el-dialog
+      :title="title"
+      :visible.sync="dialogVisible"
+      width="40%">
+      <el-form ref="examineForm"
+               :model="examineForm"
+               label-width="150px" size="small">
+        <el-form-item label="审批意见：">
+          <el-input v-model="examineForm.description"
+                    :rows="5"
+                    style="width: 250px"
+                    type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="handleDialogConfirm()">{{ confirmText }}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -72,8 +91,16 @@ import ProjectDetail from "./components/Project"
 import ContractDetail from "./components/Contract"
 import { processDetailFetch } from "@/api/ams/process/process"
 import { mapGetters } from 'vuex'
+import {createDepartment, updateDepartment} from "@/api/department";
 let _this = null; //_this固定指向vue对象,避免多层this
 
+const defalutExamineForm = {
+  id:null,
+  description: '',
+  examineUser: '',
+  examineUserRole: '',
+  examineHandle: '',
+}
 export default {
   name: 'ProcessDetailsTemlate', //vue组件名称
   components: { //子组件
@@ -81,7 +108,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'routers'
+      'routers', 'roles', 'nickName'
     ]),
     routes() {
       // return this.$router.options.routes
@@ -100,6 +127,10 @@ export default {
         baseInfo: {},
         concreteInfo: {}
       },
+      dialogVisible: false,
+      title: '',
+      confirmText: '',
+      examineForm: Object.assign({}, defalutExamineForm)
     }
   },
   mounted(){
@@ -118,7 +149,59 @@ export default {
         this.processData = data
         console.log('审核详情', data)
        })
-    }
+    },
+    processReslove(){
+      console.log('审核通过', this.currentProcessid)
+      this.title = "审核通过"
+      this.confirmText = "通 过"
+      this.examineForm.id = this.currentProcessid
+      this.examineForm.description = ''
+      this.examineForm.status = 1
+      this.examineForm.examineHandle = '审核通过'
+      this.examineForm.examineUser = this.nickName
+      this.examineForm.examineUserRole = this.roles[0]
+      this.dialogVisible =true
+    },
+    processReject(){
+      console.log('审核驳回', this.currentProcessid)
+      this.title = "审核驳回"
+      this.confirmText = "驳 回"
+      this.examineForm.id = this.currentProcessid
+      this.examineForm.description = ''
+      this.examineForm.examineHandle = '审核驳回'
+      this.examineForm.status = 3
+      this.examineForm.examineUser = this.nickName
+      this.examineForm.examineUserRole = this.roles[0]
+      this.dialogVisible =true
+    },
+    handleDialogConfirm() {
+      this.$confirm('是否要确认?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log('审核动作', this.examineForm)
+        /*if (this.isEdit) {
+          updateDepartment(this.department.id,this.department).then(response => {
+            this.$message({
+              message: '修改成功！',
+              type: 'success'
+            });
+            this.dialogVisible =false;
+            this.getList();
+          })
+        } else {
+          createDepartment(this.department).then(response => {
+            this.$message({
+              message: '添加成功！',
+              type: 'success'
+            });
+            this.dialogVisible =false;
+            this.getList();
+          })
+        }*/
+      })
+    },
   }
 }
 </script>

@@ -7,27 +7,45 @@
     <div class="table-layout">
       <el-row>
         <el-col :span="5" class="table-cell-title">收款单位名称</el-col>
-        <el-col :span="5" class="table-cell-title">开户行</el-col>
-        <el-col :span="5" class="table-cell-title">银行账号</el-col>
-        <el-col :span="5" class="table-cell-title">金额</el-col>
-        <el-col :span="4" class="table-cell-title">金额大写</el-col>
+        <el-col :span="5" class="table-cell-title">开户行名称</el-col>
+        <el-col :span="5" class="table-cell-title">开户行帐号</el-col>
+        <el-col :span="5" class="table-cell-title">合同名称</el-col>
+        <el-col :span="4" class="table-cell-title">合同编号</el-col>
       </el-row>
       <el-row>
         <el-col :span="5" class="table-cell">{{ value.concreteInfo.collectionCompnay }}</el-col>
         <el-col :span="5" class="table-cell">{{ value.concreteInfo.bankName }}</el-col>
         <el-col :span="5" class="table-cell">{{ value.concreteInfo.bankAccount }}</el-col>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.payMoney }}</el-col>
-        <el-col :span="4" class="table-cell">{{ value.concreteInfo.uppercase }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.contractName }}</el-col>
+        <el-col :span="4" class="table-cell">{{ value.concreteInfo.contractCode }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="5" class="table-cell-title">付款方式</el-col>
-        <el-col :span="5" class="table-cell-title">报账类型</el-col>
-        <el-col :span="5" class="table-cell-title">用途</el-col>
+        <el-col :span="5" class="table-cell-title">合同金额</el-col>
+        <el-col :span="5" class="table-cell-title">实际结算金额</el-col>
+        <el-col :span="5" class="table-cell-title">付款事由说明</el-col>
+        <el-col :span="5" class="table-cell-title">累计已开发票金额</el-col>
+        <el-col :span="4" class="table-cell-title">累计已付款金额</el-col>
       </el-row>
       <el-row>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.payType }}</el-col>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.typeId }}</el-col>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.usefull }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.contractMoney }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.actualMoney }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.payReason }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.cumulInvoice }}</el-col>
+        <el-col :span="4" class="table-cell">{{ value.concreteInfo.cumulPay }}</el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="5" class="table-cell-title">应付款金额</el-col>
+        <el-col :span="5" class="table-cell-title">本次开票金额</el-col>
+        <el-col :span="5" class="table-cell-title">本次申请付款金额</el-col>
+        <el-col :span="5" class="table-cell-title">金额大写</el-col>
+        <el-col :span="4" class="table-cell-title">报账类型</el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.shuldPay }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.thsTime }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.thsTimeWant }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.uppercase }}</el-col>
+        <el-col :span="4" class="table-cell">{{ value.concreteInfo.typeId }}</el-col>
       </el-row>
     </div>
   </div>

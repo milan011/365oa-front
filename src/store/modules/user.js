@@ -5,6 +5,7 @@ const user = {
   state: {
     token: getToken(),
     name: '',
+    nickName: '',
     avatar: '',
     roles: [],
     roleIds: [],
@@ -17,6 +18,9 @@ const user = {
     },
     SET_NAME: (state, name) => {
       state.name = name
+    },
+    SET_NICK_NAME: (state, nickName) => {
+      state.nickName = nickName
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -66,6 +70,7 @@ const user = {
             reject('getInfo: departments must be a non-null array !')
           }
           commit('SET_NAME', data.username)
+          commit('SET_NICK_NAME', data.nickname)
           commit('SET_AVATAR', data.icon)
           resolve(response)
         }).catch(error => {
