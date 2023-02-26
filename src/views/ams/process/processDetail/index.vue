@@ -89,7 +89,7 @@ import AdvancePayDetail from "./components/AdvancePay"
 import BuyPlanDetail from "./components/BuyPlan"
 import ProjectDetail from "./components/Project"
 import ContractDetail from "./components/Contract"
-import { processDetailFetch } from "@/api/ams/process/process"
+import { processDetailFetch, processExamine } from "@/api/ams/process/process"
 import { mapGetters } from 'vuex'
 import {createDepartment, updateDepartment} from "@/api/department";
 let _this = null; //_this固定指向vue对象,避免多层this
@@ -181,6 +181,13 @@ export default {
         type: 'warning'
       }).then(() => {
         console.log('审核动作', this.examineForm)
+        processExamine(this.examineForm).then((res)=>{
+          this.$message({
+            message: '修改成功！',
+            type: 'success'
+          });
+          this.dialogVisible =false;
+        })
         /*if (this.isEdit) {
           updateDepartment(this.department.id,this.department).then(response => {
             this.$message({

@@ -7,6 +7,14 @@ export function processDetailFetch(id) {
     method: 'get'
   })
 }
+/*审批单审核*/
+export function processExamine(data) {
+  return request({
+    url: '/process/processExamine',
+    method: 'post',
+    data: data
+  })
+}
 /*报销审批单创建*/
 export function createReimbursement(data) {
   return request({
