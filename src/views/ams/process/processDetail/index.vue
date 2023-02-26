@@ -2,8 +2,8 @@
   <div class="app-container process-details-temlate">
     <el-card shadow="never" style="margin-top: 15px">
       <div class="operate-container">
-        <span style="margin-left: 20px">有审核的预付款审批单</span>
-        <el-tag>预付款审批单</el-tag>
+        <span style="margin-left: 20px">{{ processData.baseInfo.name }}</span>
+        <el-tag>{{ processData.baseInfo.apply_type_name }}</el-tag>
         <div class="operate-button-container">
           <el-button size="mini">审批通过</el-button>
           <el-button size="mini">审批驳回</el-button>
@@ -29,7 +29,12 @@
           <el-col :span="4" class="table-cell">审批中</el-col>
         </el-row>
       </div>
-      <reimbursement-detail ref="ReimbursementDetail"></reimbursement-detail>
+      <reimbursement-detail v-show="processType == '1'" v-model="processData" ref="ReimbursementDetail"></reimbursement-detail>
+      <pay-apply v-show="processType == '2'" v-model="processData" ref="PayApply"></pay-apply>
+      <advance-pay-detail v-show="processType == '3'" v-model="processData" ref="AdvancePayDetail"></advance-pay-detail>
+      <buy-plan-detail v-show="processType == '4'" v-model="processData" ref="BuyPlanDetail"></buy-plan-detail>
+      <contract-detail v-show="processType == '5'" v-model="processData" ref="ContractDetail"></contract-detail>
+      <project-detail v-show="processType == '6'" v-model="processData" ref="ProjectDetail"></project-detail>
       <div style="margin-top: 20px">
         <svg-icon icon-class="marker" style="color: #606266"></svg-icon>
         <span class="font-small">流程信息</span>
@@ -60,6 +65,11 @@
 <script>
 import { validatenull } from "@/utils/validate";
 import  ReimbursementDetail  from "./components/ReimbursementDetail"
+import  PayApply  from "./components/PayApply"
+import AdvancePayDetail from "./components/AdvancePay"
+import BuyPlanDetail from "./components/BuyPlan"
+import ProjectDetail from "./components/Project"
+import ContractDetail from "./components/Contract"
 import { processDetailFetch } from "@/api/ams/process/process"
 import { mapGetters } from 'vuex'
 let _this = null; //_this固定指向vue对象,避免多层this
@@ -67,7 +77,7 @@ let _this = null; //_this固定指向vue对象,避免多层this
 export default {
   name: 'ProcessDetailsTemlate', //vue组件名称
   components: { //子组件
-    ReimbursementDetail
+    ReimbursementDetail, PayApply, AdvancePayDetail, BuyPlanDetail, ProjectDetail, ContractDetail
   },
   computed: {
     ...mapGetters([
@@ -85,6 +95,11 @@ export default {
   },
   data() {
     return {
+      processType: null,
+      processData: {
+        baseInfo: {},
+        concreteInfo: {}
+      },
     }
   },
   mounted(){
@@ -99,6 +114,8 @@ export default {
     getProcessDetail(){
       processDetailFetch(this.currentProcessid).then((res)=>{
         const { data } = res
+        this.processType = data.baseInfo.apply_type_id;
+        this.processData = data
         console.log('审核详情', data)
        })
     }

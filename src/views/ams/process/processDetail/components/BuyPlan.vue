@@ -1,10 +1,10 @@
 <template>
-  <div class="reimbursement-detail">
+  <div class="buy-plan-detail">
     <div style="margin-top: 20px">
       <svg-icon icon-class="marker" style="color: #606266"></svg-icon>
-      <span class="font-small">报销审批单详情</span>
+      <span class="font-small">采购计划单详情</span>
     </div>
-    <div class="table-layout">
+    <!--<div class="table-layout">
       <el-row>
         <el-col :span="5" class="table-cell-title">收款方户名</el-col>
         <el-col :span="5" class="table-cell-title">开户行</el-col>
@@ -29,35 +29,34 @@
     <div style="margin-top: 20px">
       <svg-icon icon-class="marker" style="color: #606266"></svg-icon>
       <span class="font-small">报销款项明细</span>
-    </div>
+    </div>-->
+
+
+
+
+
     <div class="table-container">
       <el-table ref="detailsTable"
-                :data="value.billList"
+                :data="value.planList"
                 style="width: 100%;"
                 v-loading="listLoading" border>
-        <el-table-column label="费用日期" align="center">
-          <template slot-scope="scope">{{scope.row.happenTime | formatDateTime}}</template>
+        <el-table-column label="物资名称" align="center">
+          <template slot-scope="scope">{{scope.row.goodsName}}</template>
         </el-table-column>
-        <el-table-column label="费用科目" align="center">
-          <template slot-scope="scope">{{scope.row.reimCourse}}</template>
+        <el-table-column label="使用部门/人" align="center">
+          <template slot-scope="scope">{{scope.row.department}}</template>
         </el-table-column>
-        <el-table-column label="费用说明" align="center">
-          <template slot-scope="scope">{{scope.row.reimExplain}}</template>
+        <el-table-column label="商品单位" align="center">
+          <template slot-scope="scope">{{scope.row.goodsUnit}}</template>
         </el-table-column>
-        <el-table-column label="报销金额" align="center">
-          <template slot-scope="scope">{{scope.row.reimMoney}}</template>
+        <el-table-column label="商品数量" align="center">
+          <template slot-scope="scope">{{scope.row.goodsNums}}</template>
         </el-table-column>
-        <el-table-column label="金额大写" align="center">
-          <template slot-scope="scope">{{scope.row.uppercase}}</template>
+        <el-table-column label="预计单价" align="center">
+          <template slot-scope="scope">{{scope.row.onesMoney}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="140" align="center">
-          <template slot-scope="scope">
-            <el-button size="mini"
-                       type="text"
-                       @click="showBillInfo(scope.row)">
-              查看票据
-            </el-button>
-          </template>
+        <el-table-column label="计划金额" align="center">
+          <template slot-scope="scope">{{scope.row.goodsMoney}}</template>
         </el-table-column>
       </el-table>
     </div>
@@ -70,7 +69,7 @@ import {formatDate} from "@/utils/date";
 let _this = null; //_this固定指向vue对象,避免多层this
 
 export default {
-  name: 'ReimbursementDetail', //vue组件名称
+  name: 'BuyPlanDetail', //vue组件名称
   components: { //子组件
   },
   props: {
@@ -78,8 +77,7 @@ export default {
       type: Object,
       default: function () {
         return {
-          concreteInfo: {},
-          billList: []
+          concreteInfo: []
         }
       }
     },
@@ -157,6 +155,6 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-.reimbursement-detail{
+.buy-plan-detail{
 }
 </style>

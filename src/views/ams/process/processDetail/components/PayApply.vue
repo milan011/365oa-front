@@ -1,65 +1,34 @@
 <template>
-  <div class="reimbursement-detail">
+  <div class="pay-apply-detail">
     <div style="margin-top: 20px">
       <svg-icon icon-class="marker" style="color: #606266"></svg-icon>
-      <span class="font-small">报销审批单详情</span>
+      <span class="font-small">付款申请单详情</span>
     </div>
     <div class="table-layout">
       <el-row>
-        <el-col :span="5" class="table-cell-title">收款方户名</el-col>
+        <el-col :span="5" class="table-cell-title">收款单位名称</el-col>
         <el-col :span="5" class="table-cell-title">开户行</el-col>
         <el-col :span="5" class="table-cell-title">银行账号</el-col>
         <el-col :span="5" class="table-cell-title">金额</el-col>
         <el-col :span="4" class="table-cell-title">金额大写</el-col>
       </el-row>
       <el-row>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.payPeople }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.collectionCompnay }}</el-col>
         <el-col :span="5" class="table-cell">{{ value.concreteInfo.bankName }}</el-col>
         <el-col :span="5" class="table-cell">{{ value.concreteInfo.bankAccount }}</el-col>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.reimMoney }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.payMoney }}</el-col>
         <el-col :span="4" class="table-cell">{{ value.concreteInfo.uppercase }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="10" class="table-cell-title">报销事由</el-col>
+        <el-col :span="5" class="table-cell-title">付款方式</el-col>
+        <el-col :span="5" class="table-cell-title">报账类型</el-col>
+        <el-col :span="5" class="table-cell-title">用途</el-col>
       </el-row>
       <el-row>
-        <el-col :span="10" class="table-cell">{{ value.concreteInfo.reimReason }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.payType }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.typeId }}</el-col>
+        <el-col :span="5" class="table-cell">{{ value.concreteInfo.usefull }}</el-col>
       </el-row>
-    </div>
-    <div style="margin-top: 20px">
-      <svg-icon icon-class="marker" style="color: #606266"></svg-icon>
-      <span class="font-small">报销款项明细</span>
-    </div>
-    <div class="table-container">
-      <el-table ref="detailsTable"
-                :data="value.billList"
-                style="width: 100%;"
-                v-loading="listLoading" border>
-        <el-table-column label="费用日期" align="center">
-          <template slot-scope="scope">{{scope.row.happenTime | formatDateTime}}</template>
-        </el-table-column>
-        <el-table-column label="费用科目" align="center">
-          <template slot-scope="scope">{{scope.row.reimCourse}}</template>
-        </el-table-column>
-        <el-table-column label="费用说明" align="center">
-          <template slot-scope="scope">{{scope.row.reimExplain}}</template>
-        </el-table-column>
-        <el-table-column label="报销金额" align="center">
-          <template slot-scope="scope">{{scope.row.reimMoney}}</template>
-        </el-table-column>
-        <el-table-column label="金额大写" align="center">
-          <template slot-scope="scope">{{scope.row.uppercase}}</template>
-        </el-table-column>
-        <el-table-column label="操作" width="140" align="center">
-          <template slot-scope="scope">
-            <el-button size="mini"
-                       type="text"
-                       @click="showBillInfo(scope.row)">
-              查看票据
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
     </div>
   </div>
 </template>
@@ -70,7 +39,7 @@ import {formatDate} from "@/utils/date";
 let _this = null; //_this固定指向vue对象,避免多层this
 
 export default {
-  name: 'ReimbursementDetail', //vue组件名称
+  name: 'PayApplyDetail', //vue组件名称
   components: { //子组件
   },
   props: {
@@ -121,9 +90,6 @@ export default {
   watch:{ //响应数据的变化
   },
   methods: {
-    showBillInfo(){
-      console.log('查看票据')
-    }
   }
 }
 </script>
@@ -157,6 +123,6 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-.reimbursement-detail{
+.pay-apply-detail{
 }
 </style>
