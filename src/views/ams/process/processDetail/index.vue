@@ -40,22 +40,12 @@
         <span class="font-small">流程信息</span>
       </div>
       <el-timeline class="process-timeline">
-        <el-timeline-item timestamp="2018/4/12" placement="top">
+        <el-timeline-item v-for="(item, index) in timeLineArr" :timestamp="item.examineTime" placement="top">
           <el-card>
-            <h4>同意审批</h4>
-            <p>财务负责人 王小虎 审批通过 2018/4/2 20:46</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/3" placement="top">
-          <el-card>
-            <h4>同意审批</h4>
-            <p>会计 王小虎 审批通过 2018/4/2 20:46</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/2" placement="top">
-          <el-card>
-            <h4>同意审批</h4>
-            <p>技术部经理 王小虎 审批通过 2018/4/2 20:46</p>
+            <el-tag v-if="item.examineHandle == '审核通过'" type="success">{{ item.examineHandle }}</el-tag>
+            <el-tag v-if="item.examineHandle == '审核驳回'" type="danger">{{ item.examineHandle }}</el-tag>
+            <h4>{{ item.description }}</h4>
+            <p>{{ item.examineUserRole }} {{ item.examineUser }} {{ item.examineTime }}</p>
           </el-card>
         </el-timeline-item>
       </el-timeline>
@@ -72,6 +62,18 @@
                     :rows="5"
                     style="width: 250px"
                     type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item v-if="handleNextShow()" label="下一步审核人：" prop="examineUserId">
+          <el-select
+            v-model="examineForm.examineUserId"
+            placeholder="请选择审核人">
+            <el-option
+              v-for="item in examineUserList"
+              :key="item.id"
+              :label="item.nickName"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -92,10 +94,12 @@ import ContractDetail from "./components/Contract"
 import { processDetailFetch, processExamine } from "@/api/ams/process/process"
 import { mapGetters } from 'vuex'
 import {createDepartment, updateDepartment} from "@/api/department";
+import {fetchExamineUserList} from "@/api/login";
 let _this = null; //_this固定指向vue对象,避免多层this
 
 const defalutExamineForm = {
   id:null,
+  examineUserId: null,
   description: '',
   examineUser: '',
   examineUserRole: '',
@@ -108,7 +112,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'routers', 'roles', 'nickName'
+      'routers', 'roles', 'nickName', 'departments', "roleIds"
     ]),
     routes() {
       // return this.$router.options.routes
@@ -119,6 +123,7 @@ export default {
     _this = this //_this固定指向vue对象,避免多层this
     this.currentProcessid = this.$route.query.id;
     this.getProcessDetail()
+    this.getExamineUserList()
   },
   data() {
     return {
@@ -127,7 +132,10 @@ export default {
         baseInfo: {},
         concreteInfo: {}
       },
+      examineUserList: [],
       dialogVisible: false,
+      handleNext: false,
+      timeLineArr: [],
       title: '',
       confirmText: '',
       examineForm: Object.assign({}, defalutExamineForm)
@@ -147,24 +155,33 @@ export default {
         const { data } = res
         this.processType = data.baseInfo.apply_type_id;
         this.processData = data
+        if(data.baseInfo.steps_concent){
+          console.log('审核流', JSON.parse(data.baseInfo.steps_concent))
+          this.timeLineArr = JSON.parse(data.baseInfo.steps_concent)
+          for(let item of this.timeLineArr){
+            item.examineTime = this.$moment(item.examineTime).format('YYYY-MM-DD HH:mm:ss')
+          }
+        }
         console.log('审核详情', data)
        })
     },
     processReslove(){
       console.log('审核通过', this.currentProcessid)
       this.title = "审核通过"
+      this.handleNext = true
       this.confirmText = "通 过"
       this.examineForm.id = this.currentProcessid
       this.examineForm.description = ''
-      this.examineForm.status = 1
       this.examineForm.examineHandle = '审核通过'
       this.examineForm.examineUser = this.nickName
       this.examineForm.examineUserRole = this.roles[0]
+      this.examineForm.status = this.roleIds.includes(9) ? 2 : 1
       this.dialogVisible =true
     },
     processReject(){
       console.log('审核驳回', this.currentProcessid)
       this.title = "审核驳回"
+      this.handleNext = false
       this.confirmText = "驳 回"
       this.examineForm.id = this.currentProcessid
       this.examineForm.description = ''
@@ -173,6 +190,9 @@ export default {
       this.examineForm.examineUser = this.nickName
       this.examineForm.examineUserRole = this.roles[0]
       this.dialogVisible =true
+    },
+    handleNextShow(){
+      return this.handleNext && (!this.roleIds.includes(9))
     },
     handleDialogConfirm() {
       this.$confirm('是否要确认?', '提示', {
@@ -207,6 +227,17 @@ export default {
             this.getList();
           })
         }*/
+      })
+    },
+    getExamineUserList(){
+      const params = {
+        roleIds: this.roleIds,
+        departments: this.departments
+      }
+      fetchExamineUserList(params).then(response =>{
+        console.log('审核人员列表', response)
+        const { data } = response
+        this.examineUserList = data
       })
     },
   }
