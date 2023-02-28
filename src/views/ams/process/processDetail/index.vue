@@ -207,6 +207,7 @@ export default {
             type: 'success'
           });
           this.dialogVisible =false;
+          this.$router.push({path:'/ams/processRecord'})
         })
         /*if (this.isEdit) {
           updateDepartment(this.department.id,this.department).then(response => {

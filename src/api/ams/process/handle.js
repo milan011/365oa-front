@@ -7,3 +7,12 @@ export function fetchList(params) {
     params: params
   })
 }
+
+export function fetchRecordList(params) {
+  return request({
+    url: '/process/handleRecordList',
+    method: 'get',
+    params: params
+  })
+}
+

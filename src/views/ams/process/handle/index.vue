@@ -21,7 +21,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="名称：">
-            <el-input v-model="listQuery.nameKeyword" class="input-width" placeholder="资源名称" clearable></el-input>
+            <el-input v-model="listQuery.nameKeyword" class="input-width" placeholder="名称" clearable></el-input>
           </el-form-item>
           <el-form-item label="分类：">
             <el-select v-model="listQuery.applyTypeId" placeholder="全部" clearable class="input-width">
