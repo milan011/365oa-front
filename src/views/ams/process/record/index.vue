@@ -50,6 +50,22 @@
         <el-table-column label="名称" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
+        <el-table-column label="审批状态" align="center">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status == 1">
+              {{processStatusRefect(scope.row.status)}}
+            </el-tag>
+            <el-tag type="success" v-if="scope.row.status == 2">
+              {{processStatusRefect(scope.row.status)}}
+            </el-tag>
+            <el-tag type="warning" v-if="scope.row.status == 3">
+              {{processStatusRefect(scope.row.status)}}
+            </el-tag>
+            <el-tag type="danger" v-if="scope.row.status == 4">
+              {{processStatusRefect(scope.row.status)}}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="审批类型" align="center">
           <template slot-scope="scope">{{scope.row.apply_type_name}}</template>
         </el-table-column>
@@ -103,7 +119,7 @@
 <script>
 import {formatDate} from "@/utils/date";
 import {createDepartment, deleteDepartment, fetchList, updateDepartment, updateStatus} from "@/api/department";
-import {applyTypesMap, prioritysMap} from "@/common/dic";
+import {applyTypesMap, prioritysMap, processStatusMap} from "@/common/dic";
 import { fetchRecordList } from "@/api/ams/process/handle";
 const defaultListQuery = {
   pageNum: 1,
@@ -121,6 +137,7 @@ export default {
       listLoading: false,
       applyTypesMap,
       prioritysMap,
+      processStatusMap,
     }
   },
   created() {
@@ -169,6 +186,10 @@ export default {
       let returnObj = this.prioritysMap.find(item=>item.value == val)
       return returnObj ? returnObj.label : ''
     },
+    processStatusRefect(val){
+      let returnObj = this.processStatusMap.find(item=>item.value == val)
+      return returnObj ? returnObj.label : ''
+    }
   }
 }
 

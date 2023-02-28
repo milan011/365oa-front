@@ -13,6 +13,13 @@ export const applyTypesMap = [
   {value: '5',label: '合同会签'},
   {value: '6',label: '工程项目付款审批单'},
 ];
+//审批状态
+export const processStatusMap = [
+  {value: '1',label: '审核中', type: ''},
+  {value: '2',label: '审核结束', type: 'success'},
+  {value: '3',label: '审核驳回', type: 'warning'},
+  {value: '4',label: '审核撤销', type: 'danger'},
+];
 //费用科目
 export const reimCourseOptions = [
   {
