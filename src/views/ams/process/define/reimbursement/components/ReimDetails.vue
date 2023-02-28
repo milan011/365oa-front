@@ -84,10 +84,10 @@
         <el-form-item label="大写金额：">
           <el-input readonly v-model="reimDetails.uppercase" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item label="上传票据：">
-          <!--<el-input v-model="reimDetails.billList" style="width: 250px"></el-input>-->
+        <!--<el-form-item label="上传票据：">
+          &lt;!&ndash;<el-input v-model="reimDetails.billList" style="width: 250px"></el-input>&ndash;&gt;
           <multi-upload v-model="selectReimPics"></multi-upload>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogVisible = false">取 消</el-button>

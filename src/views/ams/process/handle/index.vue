@@ -80,7 +80,8 @@
             <el-button size="mini"
                        type="text"
                        @click="handleExame(scope.row)">
-              查看并审核
+              <span v-if="scope.row.examine_user_id == userId">查看并审核</span>
+              <span v-else>查看</span>
             </el-button>
           </template>
         </el-table-column>
@@ -104,6 +105,7 @@
 import {formatDate} from "@/utils/date";
 import { fetchList } from "@/api/ams/process/handle";
 import { applyTypesMap, prioritysMap } from "@/common/dic"
+import {mapGetters} from "vuex";
 const defaultListQuery = {
   pageNum: 1,
   pageSize: 10,
@@ -121,6 +123,15 @@ export default {
       applyTypesMap,
       prioritysMap,
     }
+  },
+  computed: {
+    ...mapGetters([
+      'routers', 'roles', 'nickName', 'departments', "roleIds", "userId"
+    ]),
+    routes() {
+      // return this.$router.options.routes
+      return this.routers
+    },
   },
   created() {
     this.getList();

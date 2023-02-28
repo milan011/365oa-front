@@ -4,7 +4,9 @@
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar">
+        <el-tag style="position: relative;bottom: 15px;">{{ nickName }}</el-tag>
+        <!--<img class="user-avatar" :src="avatarImg">-->
+        <img class="user-avatar" :src="avatarImg">
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
@@ -34,8 +36,15 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'roles',
+      'nickName',
     ])
+  },
+  data() {
+    return {
+      avatarImg: 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/timg.jpg'
+    }
   },
   methods: {
     toggleSideBar() {

@@ -7,6 +7,7 @@ const user = {
     name: '',
     nickName: '',
     avatar: '',
+    userId: '',
     roles: [],
     roleIds: [],
     departments: [],
@@ -21,6 +22,9 @@ const user = {
     },
     SET_NICK_NAME: (state, nickName) => {
       state.nickName = nickName
+    },
+    SET_USER_ID: (state, userId) => {
+      state.userId = userId
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -61,6 +65,7 @@ const user = {
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
             commit('SET_ROLEIDS', data.roleIds)
+            commit('SET_USER_ID', data.userId)
           } else {
             reject('getInfo: roles must be a non-null array !')
           }

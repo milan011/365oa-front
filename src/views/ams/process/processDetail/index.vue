@@ -4,7 +4,7 @@
       <div class="operate-container">
         <span style="margin-left: 20px">{{ processData.baseInfo.name }}</span>
         <el-tag>{{ processData.baseInfo.apply_type_name }}</el-tag>
-        <div class="operate-button-container">
+        <div v-show="handleButtonShow()" class="operate-button-container">
           <el-button @click="processReslove" size="mini">审批通过</el-button>
           <el-button @click="processReject" size="mini">审批驳回</el-button>
         </div>
@@ -112,7 +112,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'routers', 'roles', 'nickName', 'departments', "roleIds"
+      'routers', 'roles', 'nickName', 'departments', "roleIds", "userId"
     ]),
     routes() {
       // return this.$router.options.routes
@@ -241,6 +241,11 @@ export default {
         this.examineUserList = data
       })
     },
+    handleButtonShow(){
+      let statusAllow = this.processData.baseInfo.status == 1
+      let userAllow = this.processData.baseInfo.examine_user_id == this.userId
+      return statusAllow && userAllow
+    }
   }
 }
 </script>

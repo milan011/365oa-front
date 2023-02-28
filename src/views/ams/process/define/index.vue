@@ -10,13 +10,13 @@
         </el-col>
         <el-col :span="6">
           <div @click="toPayApply" class="total-frame">
-            <img :src="img_home_order" class="total-icon">
+            <img :src="img_home_today_amount" class="total-icon">
             <div class="total-title">付款审批单</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div @click="toAdvancepay" class="total-frame">
-            <img :src="img_home_order" class="total-icon">
+            <img :src="img_home_yesterday_amount" class="total-icon">
             <div class="total-title">预付款审批单</div>
           </div>
         </el-col>
@@ -32,13 +32,13 @@
       <el-row :gutter="20">
         <el-col :span="6">
           <div @click="toBuyplan" class="total-frame">
-            <img :src="img_home_order" class="total-icon">
+            <img :src="img_home_today_amount" class="total-icon">
             <div class="total-title">物资采购审批单</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div @click="toProject" class="total-frame">
-            <img :src="img_home_order" class="total-icon">
+            <img :src="img_home_yesterday_amount" class="total-icon">
             <div class="total-title">工程项目付款审批单</div>
           </div>
         </el-col>
@@ -50,12 +50,16 @@
 import {formatDate} from "@/utils/date";
 import {createDepartment, deleteDepartment, fetchList, updateDepartment, updateStatus} from "@/api/department";
 import img_home_order from '@/assets/images/home_order.png';
+import img_home_today_amount from '@/assets/images/home_today_amount.png';
+import img_home_yesterday_amount from '@/assets/images/home_yesterday_amount.png';
 
 export default {
   name: 'departmentList',
   data() {
     return {
       img_home_order,
+      img_home_today_amount,
+      img_home_yesterday_amount
     }
   },
   created() {
