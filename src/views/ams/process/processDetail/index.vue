@@ -22,11 +22,11 @@
           <el-col :span="4" class="table-cell-title">审批状态</el-col>
         </el-row>
         <el-row>
-          <el-col :span="5" class="table-cell">技术部员工</el-col>
-          <el-col :span="5" class="table-cell">技术部</el-col>
-          <el-col :span="5" class="table-cell">正常</el-col>
-          <el-col :span="5" class="table-cell">2023-02-22</el-col>
-          <el-col :span="4" class="table-cell">审批中</el-col>
+          <el-col :span="5" class="table-cell">{{ processData.baseInfo.applyUser }}</el-col>
+          <el-col :span="5" class="table-cell">{{ processData.baseInfo.depname }}</el-col>
+          <el-col :span="5" class="table-cell">{{ priorityRefect(processData.baseInfo.priority) }}</el-col>
+          <el-col :span="5" class="table-cell">{{ processData.baseInfo.create_time | formatDateTime }}</el-col>
+          <el-col :span="4" class="table-cell">{{ processStatusRefect(processData.baseInfo.status) }}</el-col>
         </el-row>
       </div>
       <reimbursement-detail v-show="processType == '1'" v-model="processData" ref="ReimbursementDetail"></reimbursement-detail>
@@ -91,10 +91,12 @@ import AdvancePayDetail from "./components/AdvancePay"
 import BuyPlanDetail from "./components/BuyPlan"
 import ProjectDetail from "./components/Project"
 import ContractDetail from "./components/Contract"
+import {applyTypesMap, prioritysMap, processStatusMap} from "@/common/dic";
 import { processDetailFetch, processExamine } from "@/api/ams/process/process"
 import { mapGetters } from 'vuex'
 import {createDepartment, updateDepartment} from "@/api/department";
 import {fetchExamineUserList} from "@/api/login";
+import {formatDate} from "@/utils/date";
 let _this = null; //_this固定指向vue对象,避免多层this
 
 const defalutExamineForm = {
@@ -119,6 +121,15 @@ export default {
       return this.routers
     },
   },
+  filters: {
+    formatDateTime(time) {
+      if (time == null || time === '') {
+        return 'N/A';
+      }
+      let date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd')
+    }
+  },
   created() {
     _this = this //_this固定指向vue对象,避免多层this
     this.currentProcessid = this.$route.query.id;
@@ -138,6 +149,9 @@ export default {
       timeLineArr: [],
       title: '',
       confirmText: '',
+      applyTypesMap,
+      prioritysMap,
+      processStatusMap,
       examineForm: Object.assign({}, defalutExamineForm)
     }
   },
@@ -245,7 +259,15 @@ export default {
       let statusAllow = this.processData.baseInfo.status == 1
       let userAllow = this.processData.baseInfo.examine_user_id == this.userId
       return statusAllow && userAllow
-    }
+    },
+    priorityRefect(val){
+      let returnObj = this.prioritysMap.find(item=>item.value == val)
+      return returnObj ? returnObj.label : ''
+    },
+    processStatusRefect(val){
+      let returnObj = this.processStatusMap.find(item=>item.value == val)
+      return returnObj ? returnObj.label : ''
+    },
   }
 }
 </script>

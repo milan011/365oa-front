@@ -25,13 +25,14 @@
       </el-row>
       <el-row>
         <el-col :span="5" class="table-cell">{{ value.concreteInfo.usefull }}</el-col>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.typeId }}</el-col>
+        <el-col :span="5" class="table-cell">{{ reimburseTypeRefect(value.concreteInfo.typeId) }}</el-col>
       </el-row>
     </div>
   </div>
 </template>
 <script>
 import { validatenull } from "@/utils/validate";
+import {reimburseTypeMap} from "@/common/dic";
 import { mapGetters } from 'vuex'
 import {formatDate} from "@/utils/date";
 let _this = null; //_this固定指向vue对象,避免多层this
@@ -77,6 +78,7 @@ export default {
   data() {
     return {
       listLoading: false,
+      reimburseTypeMap,
     }
   },
   mounted(){
@@ -88,6 +90,10 @@ export default {
   watch:{ //响应数据的变化
   },
   methods: {
+    reimburseTypeRefect(val){
+      let returnObj = this.reimburseTypeMap.find(item=>item.value == val)
+      return returnObj ? returnObj.label : ''
+    },
   }
 }
 </script>

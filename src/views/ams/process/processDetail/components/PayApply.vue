@@ -25,8 +25,8 @@
         <el-col :span="5" class="table-cell-title">用途</el-col>
       </el-row>
       <el-row>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.payType }}</el-col>
-        <el-col :span="5" class="table-cell">{{ value.concreteInfo.typeId }}</el-col>
+        <el-col :span="5" class="table-cell">{{ payTypRefect(value.concreteInfo.payType) }}</el-col>
+        <el-col :span="5" class="table-cell">{{ reimburseTypeRefect(value.concreteInfo.typeId) }}</el-col>
         <el-col :span="5" class="table-cell">{{ value.concreteInfo.usefull }}</el-col>
       </el-row>
     </div>
@@ -36,6 +36,7 @@
 import { validatenull } from "@/utils/validate";
 import { mapGetters } from 'vuex'
 import {formatDate} from "@/utils/date";
+import { payTypeMap, reimburseTypeMap } from "@/common/dic"
 let _this = null; //_this固定指向vue对象,避免多层this
 
 export default {
@@ -48,7 +49,7 @@ export default {
       default: function () {
         return {
           concreteInfo: {},
-          billList: []
+          billList: [],
         }
       }
     },
@@ -79,6 +80,8 @@ export default {
   data() {
     return {
       listLoading: false,
+      payTypeMap,
+      reimburseTypeMap,
     }
   },
   mounted(){
@@ -90,6 +93,14 @@ export default {
   watch:{ //响应数据的变化
   },
   methods: {
+    payTypRefect(val){
+      let returnObj = this.payTypeMap.find(item=>item.value == val)
+      return returnObj ? returnObj.label : ''
+    },
+    reimburseTypeRefect(val){
+      let returnObj = this.reimburseTypeMap.find(item=>item.value == val)
+      return returnObj ? returnObj.label : ''
+    },
   }
 }
 </script>

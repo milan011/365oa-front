@@ -19,13 +19,22 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="60px">
           <el-form-item label="名称：">
             <el-input v-model="listQuery.nameKeyword" class="input-width" placeholder="名称" clearable></el-input>
           </el-form-item>
-          <el-form-item label="分类：">
+          <el-form-item label="分类：" >
             <el-select v-model="listQuery.applyTypeId" placeholder="全部" clearable class="input-width">
               <el-option v-for="item in applyTypesMap"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态：">
+            <el-select v-model="listQuery.status" placeholder="全部" clearable class="input-width">
+              <el-option v-for="item in processStatusMap"
                          :key="item.value"
                          :label="item.label"
                          :value="item.value">
@@ -125,6 +134,7 @@ const defaultListQuery = {
   pageNum: 1,
   pageSize: 10,
   nameKeyword: null,
+  status: null,
   applyTypeId:null
 };
 export default {
