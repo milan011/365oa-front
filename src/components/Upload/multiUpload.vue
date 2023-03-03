@@ -15,6 +15,7 @@
       :on-exceed="handleExceed"
     >
       <i class="el-icon-plus"></i>
+      <div slot="tip" class="el-upload__tip">请上传不超过{{maxSize}}MB大小图片,最多允许上传{{maxCount}}张</div>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">

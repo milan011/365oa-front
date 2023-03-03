@@ -3,7 +3,8 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>明细列表</span>
-      <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
+      <el-tag>单个审批单明细不超过{{ detailsLimit}}条</el-tag>
+      <el-button v-show="billList.length < detailsLimit" size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
     </el-card>
     <el-tag style="margin-top: 10px;">费用总金额: {{ reimMoneyTotal }} {{ uppercaseTotal }}</el-tag>
     <div class="table-container">
@@ -191,6 +192,7 @@ export default {
   data() {
     return {
       billList: [],
+      detailsLimit: 5,
       isEdit: false,
       reimDetails: Object.assign({},defaultReimDetails),
       listLoading: false,
