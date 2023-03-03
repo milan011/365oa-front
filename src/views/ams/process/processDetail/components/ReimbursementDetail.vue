@@ -61,6 +61,30 @@
         </el-table-column>
       </el-table>
     </div>
+    <el-dialog
+      title="票据图片"
+      :visible.sync="billImgDialogVisible"
+      width="50%"
+      center>
+      <el-row :gutter="20">
+        <el-col align="center" :span="6" v-for="(item, index) in billImgList" :key="index">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="item"
+            :preview-src-list="[item]"
+            fit="contain"></el-image>
+        </el-col>
+      </el-row>
+      <!--<el-image
+        v-for="(item, index) in billImgList"
+        :key="index"
+        style="width: 100px; height: 100px"
+        :src="item"
+        :preview-src-list="[item]"
+        fit="contain"></el-image>-->
+      <span slot="footer" class="dialog-footer">
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -79,7 +103,6 @@ export default {
       default: function () {
         return {
           concreteInfo: {},
-          billList: []
         }
       }
     },
@@ -110,6 +133,8 @@ export default {
   data() {
     return {
       listLoading: false,
+      billImgDialogVisible: false,
+      billImgList: []
     }
   },
   mounted(){
@@ -121,8 +146,10 @@ export default {
   watch:{ //响应数据的变化
   },
   methods: {
-    showBillInfo(){
-      console.log('查看票据')
+    showBillInfo(row){
+      console.log('查看票据', row.billList)
+      this.billImgList = row.billList.split(',')
+      this.billImgDialogVisible = true
     }
   }
 }

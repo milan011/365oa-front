@@ -2,11 +2,13 @@
   <div>
     <el-upload
       :action="useOss?ossUploadUrl:minioUploadUrl"
+      :class="{ upCardHide: fileList.length == maxCount }"
       :data="useOss?dataObj:null"
       list-type="picture-card"
       :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
+      :accept="acceptType"
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview"
       :limit="maxCount"
@@ -31,6 +33,15 @@
       maxCount:{
         type:Number,
         default:5
+      },
+      //最大上传图片大小
+      maxSize:{
+        type:Number,
+        default:5
+      },
+      acceptType: {
+        type:String,
+        default: 'image/png,image/jpg,image/jpeg'
       }
     },
     data() {
@@ -45,8 +56,9 @@
         },
         dialogVisible: false,
         dialogImageUrl:null,
-        useOss:false, //使用oss->true;使用MinIO->false
-        ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
+        useOss:true, //使用oss->true;使用MinIO->false
+        // ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
+        ossUploadUrl:'http://guoda365.oss-cn-zhangjiakou.aliyuncs.com',
         minioUploadUrl:'http://localhost:8080/minio/upload',
       };
     },
@@ -76,6 +88,16 @@
       },
       beforeUpload(file) {
         let _self = this;
+        const isLtMaxSize = (file.size / 1024 / 1024) < this.maxSize;
+        const isJPG = this.acceptType.split(',').includes(file.type)
+        if (!isLtMaxSize) {
+          this.$message.error(`上传图片大小不能超过${this.maxSize}MB!`);
+          return false;
+        }
+        if (!isJPG) {
+          this.$message.error(`请上传符合格式图片`);
+          return false;
+        }
         if(!this.useOss){
           //不使用oss不需要获取策略
           return true;
@@ -96,6 +118,8 @@
         })
       },
       handleUploadSuccess(res, file) {
+        console.log('上传成功', res, file)
+        console.log('dataObj', this.dataObj)
         let url = this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name;
         if(!this.useOss){
           //不使用oss直接获取图片路径
@@ -115,7 +139,12 @@
   }
 </script>
 <style>
-
+/*.upCardHide{
+  display: none;
+}*/
+.upCardHide .el-upload--picture-card{
+  display: none;
+}
 </style>
 
 

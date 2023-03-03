@@ -40,7 +40,7 @@
         <span class="font-small">流程信息</span>
       </div>
       <el-timeline class="process-timeline">
-        <el-timeline-item v-for="(item, index) in timeLineArr" :timestamp="item.examineTime" placement="top">
+        <el-timeline-item v-for="(item, index) in timeLineArr" :key="index" :timestamp="item.examineTime" placement="top">
           <el-card>
             <el-tag v-if="item.examineHandle == '审核通过'" type="success">{{ item.examineHandle }}</el-tag>
             <el-tag v-if="item.examineHandle == '审核驳回'" type="danger">{{ item.examineHandle }}</el-tag>

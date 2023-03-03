@@ -84,10 +84,10 @@
         <el-form-item label="大写金额：">
           <el-input readonly v-model="reimDetails.uppercase" style="width: 250px"></el-input>
         </el-form-item>
-        <!--<el-form-item label="上传票据：">
-          &lt;!&ndash;<el-input v-model="reimDetails.billList" style="width: 250px"></el-input>&ndash;&gt;
-          <multi-upload v-model="selectReimPics"></multi-upload>
-        </el-form-item>-->
+        <el-form-item label="上传票据：">
+          <!--<el-input v-model="reimDetails.billList" style="width: 250px"></el-input>-->
+          <multi-upload v-model="selectReimPics" :maxCount="3"></multi-upload>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogVisible = false">取 消</el-button>
@@ -107,7 +107,7 @@ const defaultReimDetails = {
   happenTime: null,
   reimCourse: '',
   reimExplain: '',
-  // billList: '',
+  billList: '',
   reimMoney: 1,
   uppercase: '壹元整',
 }
@@ -127,10 +127,11 @@ export default {
       // return this.$router.options.routes
       return this.routers
     },
-    selectProductPics:{
+    selectReimPics:{
         get:function () {
-          /*let pics=[];
-          if(this.value.pic===undefined||this.value.pic==null||this.value.pic===''){
+          console.log('getImg', this.reimDetails.billList)
+          let pics=[];
+          /*if(this.value.pic===undefined||this.value.pic==null||this.value.pic===''){
             return pics;
           }
           pics.push(this.value.pic);
@@ -140,15 +141,26 @@ export default {
           let albumPics = this.value.albumPics.split(',');
           for(let i=0;i<albumPics.length;i++){
             pics.push(albumPics[i]);
+          }*/
+
+          if(this.reimDetails.billList===undefined||this.reimDetails.billList==null||this.reimDetails.billList===''){
+            return pics;
           }
-          return pics;*/
+          let albumPics = this.reimDetails.billList.split(',');
+          for(let i=0;i<albumPics.length;i++){
+            pics.push(albumPics[i]);
+          }
+          return pics;
         },
-        /*set:function (newValue) {
-          if (newValue == null || newValue.length === 0) {
-            this.value.pic = null;
-            this.value.albumPics = null;
+        set:function (newValue) {
+          console.log('setImg', newValue)
+          console.log('setImg', newValue.length)
+          if (newValue.length === 0) {
+            /*this.value.pic = null;
+            this.value.albumPics = null;*/
+            this.reimDetails.billList = ''
           } else {
-            this.value.pic = newValue[0];
+            /*this.value.pic = newValue[0];
             this.value.albumPics = '';
             if (newValue.length > 1) {
               for (let i = 1; i < newValue.length; i++) {
@@ -157,9 +169,19 @@ export default {
                   this.value.albumPics += ',';
                 }
               }
+            }*/
+            this.reimDetails.billList = ''
+            if (newValue.length > 1) {
+              for (let i = 0; i < newValue.length; i++) {
+                this.reimDetails.billList += newValue[i];
+                if (i !== newValue.length - 1) {
+                  this.reimDetails.billList += ',';
+                }
+              }
             }
+            console.log('setbillList', this.reimDetails.billList)
           }
-        }*/
+        }
       }
   },
   created() {
@@ -191,7 +213,7 @@ export default {
         ],
       },
       reimCourseOptions,
-      selectReimPics: [],
+      // selectReimPics: [],
       pickerOptions1: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -237,6 +259,9 @@ export default {
       });
     },
     handleDialogConfirm(formName){
+      console.log('上传图片', this.selectReimPics)
+      console.log('明细', this.reimDetails)
+      // return false
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(_this.isEdit){
@@ -318,6 +343,7 @@ export default {
   margin-top: 15px;
   text-align: center;
 }
+
 </style>
 <style lang="scss" scoped>
 .remi-details{
