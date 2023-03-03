@@ -171,7 +171,7 @@ export default {
               }
             }*/
             this.reimDetails.billList = ''
-            if (newValue.length > 1) {
+            if (newValue.length > 0) {
               for (let i = 0; i < newValue.length; i++) {
                 this.reimDetails.billList += newValue[i];
                 if (i !== newValue.length - 1) {
